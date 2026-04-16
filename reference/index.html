@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crafyne — Software Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:          #F5F4F0;
+      --ink:         #111111;
+      --ink-2:       #585550;
+      --ink-3:       #9A9590;
+      --accent:      #7A9E89;
+      --accent-faint: rgba(122, 158, 137, 0.10);
+      --border:      rgba(17, 17, 17, 0.08);
+      --serif:       'Instrument Serif', Georgia, serif;
+      --sans:        'Inter', system-ui, sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--sans);
+      font-weight: 400;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* ── Grain ────────────────────────────────────── */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9998;
+      opacity: 0.028;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 400px 400px;
+    }
+
+    /* ── Layout ───────────────────────────────────── */
+    .container {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 0 48px;
+    }
+
+    /* ── Reveal ───────────────────────────────────── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.75s ease, transform 0.75s ease;
+    }
+    .reveal.is-visible        { opacity: 1; transform: none; }
+    .reveal.d1                { transition-delay: 0.10s; }
+    .reveal.d2                { transition-delay: 0.20s; }
+    .reveal.d3                { transition-delay: 0.32s; }
+
+    /* ── Section shared ───────────────────────────── */
+    section { padding: 128px 0; }
+
+    .eyebrow {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      display: block;
+      margin-bottom: 56px;
+    }
+
+    /* ═══════════════════════════════════════════════
+       NAV
+    ═══════════════════════════════════════════════ */
+    nav {
+      position: fixed;
+      inset: 0 0 auto;
+      z-index: 100;
+      padding: 22px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(245, 244, 240, 0.82);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.35s;
+    }
+    nav.scrolled { border-bottom-color: var(--border); }
+
+    .nav-logo {
+      font-family: var(--serif);
+      font-size: 21px;
+      color: var(--ink);
+      text-decoration: none;
+      letter-spacing: -0.01em;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 36px;
+      list-style: none;
+    }
+    .nav-links a {
+      font-size: 13.5px;
+      color: var(--ink-2);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--ink); }
+
+    .nav-cta {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--ink) !important;
+      border: 1px solid rgba(17,17,17,0.22);
+      padding: 8px 20px;
+      border-radius: 100px;
+      transition: background 0.2s, border-color 0.2s, color 0.2s !important;
+    }
+    .nav-cta:hover {
+      background: var(--ink);
+      color: var(--bg) !important;
+      border-color: var(--ink);
+    }
+
+    /* ═══════════════════════════════════════════════
+       HERO
+    ═══════════════════════════════════════════════ */
+    .hero {
+      min-height: 100svh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 120px 48px 80px;
+      position: relative;
+      overflow: hidden;
+      --gx: 50%;
+      --gy: 46%;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(
+        ellipse 72% 56% at var(--gx) var(--gy),
+        rgba(122, 158, 137, 0.13) 0%,
+        transparent 68%
+      );
+      pointer-events: none;
+      transition: background 0.05s linear;
+    }
+
+    .hero-tag {
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 36px;
+    }
+
+    .hero-headline {
+      font-family: var(--serif);
+      font-size: clamp(44px, 7.2vw, 90px);
+      font-weight: 400;
+      line-height: 1.06;
+      letter-spacing: -0.025em;
+      max-width: 860px;
+      color: var(--ink);
+      margin-bottom: 28px;
+    }
+    .hero-headline em { font-style: italic; }
+
+    .hero-sub {
+      font-size: 17.5px;
+      color: var(--ink-2);
+      max-width: 400px;
+      line-height: 1.68;
+      margin-bottom: 52px;
+      font-weight: 300;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 18px;
+      align-items: center;
+    }
+
+    .btn-primary {
+      background: var(--ink);
+      color: var(--bg);
+      text-decoration: none;
+      padding: 14px 30px;
+      border-radius: 100px;
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      transition: opacity 0.2s;
+    }
+    .btn-primary:hover { opacity: 0.75; }
+
+    .btn-ghost {
+      color: var(--ink-2);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 400;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: color 0.2s;
+    }
+    .btn-ghost:hover { color: var(--ink); }
+    .btn-ghost .arr {
+      display: inline-block;
+      transition: transform 0.22s ease;
+    }
+    .btn-ghost:hover .arr { transform: translateX(4px); }
+
+    /* ═══════════════════════════════════════════════
+       PROOF STRIP
+    ═══════════════════════════════════════════════ */
+    .proof {
+      padding: 30px 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .proof-inner {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .proof-item {
+      font-family: var(--serif);
+      font-size: 15.5px;
+      color: var(--ink-3);
+      padding: 6px 32px;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+      position: relative;
+    }
+    .proof-item + .proof-item::before {
+      content: '·';
+      position: absolute;
+      left: 0;
+      transform: translateX(-50%);
+      color: rgba(17,17,17,0.15);
+    }
+
+    /* ═══════════════════════════════════════════════
+       WHAT WE DO
+    ═══════════════════════════════════════════════ */
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 52px 48px;
+    }
+    .service-num {
+      font-family: var(--serif);
+      font-size: 12px;
+      color: var(--ink-3);
+      margin-bottom: 18px;
+      letter-spacing: 0.04em;
+    }
+    .service-rule {
+      width: 28px;
+      height: 1px;
+      background: var(--accent);
+      margin-bottom: 22px;
+    }
+    .service-name {
+      font-family: var(--serif);
+      font-size: 22px;
+      font-weight: 400;
+      line-height: 1.2;
+      letter-spacing: -0.01em;
+      margin-bottom: 14px;
+    }
+    .service-desc {
+      font-size: 14.5px;
+      color: var(--ink-2);
+      line-height: 1.75;
+      font-weight: 300;
+    }
+
+    /* ═══════════════════════════════════════════════
+       SELECTED WORK
+    ═══════════════════════════════════════════════ */
+    .work-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    /* Asymmetric editorial layout */
+    .work-item:nth-child(1) { grid-column: 1 / 3; }
+    .work-item:nth-child(4) { grid-column: 2 / 4; }
+
+    .work-card {
+      position: relative;
+      overflow: hidden;
+      border-radius: 3px;
+      aspect-ratio: 4/3;
+      cursor: pointer;
+    }
+    .work-item:nth-child(1) .work-card,
+    .work-item:nth-child(4) .work-card {
+      aspect-ratio: 3/2;
+    }
+
+    .work-img {
+      width: 100%;
+      height: 100%;
+      transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    .work-card:hover .work-img { transform: scale(1.04); }
+
+    .work-shade {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(10,10,8,0.55) 0%, transparent 55%);
+      opacity: 0;
+      transition: opacity 0.4s;
+    }
+    .work-card:hover .work-shade { opacity: 1; }
+
+    .work-meta {
+      position: absolute;
+      bottom: 26px;
+      left: 26px;
+      right: 26px;
+      color: white;
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity 0.38s, transform 0.38s;
+    }
+    .work-card:hover .work-meta { opacity: 1; transform: none; }
+
+    .work-client { font-family: var(--serif); font-size: 21px; letter-spacing: -0.01em; }
+    .work-detail { font-size: 12.5px; opacity: 0.7; margin-top: 3px; font-weight: 300; }
+
+    /* Gradient image placeholders */
+    .img-a { background: linear-gradient(130deg, #c4d0c4 0%, #e0ddd5 55%, #d0cbbe 100%); }
+    .img-b { background: linear-gradient(135deg, #bfc6d0 0%, #d9dde5 55%, #c8ccd5 100%); }
+    .img-c { background: linear-gradient(125deg, #d0c0bc 0%, #e5dad7 55%, #cec0bb 100%); }
+    .img-d { background: linear-gradient(140deg, #151810 0%, #2b3521 45%, #1a2018 100%); }
+
+    .work-caption {
+      padding: 16px 0 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    .work-caption-name {
+      font-family: var(--serif);
+      font-size: 16px;
+      color: var(--ink);
+      margin-bottom: 3px;
+    }
+    .work-caption-outcome {
+      font-size: 13px;
+      color: var(--ink-3);
+      font-weight: 300;
+    }
+    .work-caption-year {
+      font-size: 12.5px;
+      color: var(--ink-3);
+      font-weight: 300;
+      white-space: nowrap;
+      padding-top: 2px;
+    }
+
+    /* ═══════════════════════════════════════════════
+       HOW WE WORK
+    ═══════════════════════════════════════════════ */
+    .process {
+      background: linear-gradient(180deg, var(--bg) 0%, rgba(122,158,137,0.06) 100%);
+    }
+    .process-intro {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: end;
+      margin-bottom: 96px;
+    }
+    .process-headline {
+      font-family: var(--serif);
+      font-size: clamp(30px, 3.6vw, 48px);
+      font-weight: 400;
+      line-height: 1.14;
+      letter-spacing: -0.02em;
+    }
+    .process-headline em { font-style: italic; }
+    .process-lede {
+      font-size: 15px;
+      color: var(--ink-2);
+      line-height: 1.75;
+      font-weight: 300;
+      max-width: 440px;
+      align-self: end;
+    }
+
+    .process-steps { display: grid; }
+    .process-step {
+      display: grid;
+      grid-template-columns: 72px 1fr;
+      gap: 40px;
+      padding: 52px 0;
+      border-top: 1px solid var(--border);
+    }
+    .process-step:last-child { border-bottom: 1px solid var(--border); }
+
+    .step-num {
+      font-family: var(--serif);
+      font-size: 44px;
+      color: var(--ink-3);
+      font-weight: 400;
+      letter-spacing: -0.03em;
+      line-height: 1;
+      padding-top: 4px;
+    }
+    .step-body h3 {
+      font-family: var(--serif);
+      font-size: 22px;
+      font-weight: 400;
+      letter-spacing: -0.01em;
+      margin-bottom: 12px;
+    }
+    .step-body p {
+      font-size: 14.5px;
+      color: var(--ink-2);
+      line-height: 1.78;
+      max-width: 580px;
+      font-weight: 300;
+    }
+
+    /* ═══════════════════════════════════════════════
+       TEAM
+    ═══════════════════════════════════════════════ */
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 28px;
+      margin-top: 64px;
+    }
+    .team-member { display: flex; flex-direction: column; }
+
+    .team-photo {
+      width: 100%;
+      aspect-ratio: 3/4;
+      border-radius: 3px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 36px;
+      color: rgba(255,255,255,0.85);
+      margin-bottom: 18px;
+    }
+    .ph-1 { background: #8BA899; }
+    .ph-2 { background: #9A8BA3; }
+    .ph-3 { background: #A8998B; }
+    .ph-4 { background: #8B9EA8; }
+
+    .team-name {
+      font-family: var(--serif);
+      font-size: 17px;
+      color: var(--ink);
+      margin-bottom: 3px;
+    }
+    .team-role { font-size: 13px; color: var(--ink-3); font-weight: 300; }
+
+    /* ═══════════════════════════════════════════════
+       TESTIMONIAL
+    ═══════════════════════════════════════════════ */
+    .testimonial {
+      padding: 160px 48px;
+      text-align: center;
+    }
+    .quote-mark {
+      display: block;
+      font-family: var(--serif);
+      font-size: 88px;
+      color: var(--accent);
+      line-height: 0.6;
+      margin-bottom: 52px;
+    }
+    .quote-body {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: clamp(22px, 3.2vw, 38px);
+      font-weight: 400;
+      line-height: 1.35;
+      letter-spacing: -0.015em;
+      max-width: 840px;
+      margin: 0 auto 40px;
+      color: var(--ink);
+    }
+    .quote-attr {
+      font-size: 13px;
+      color: var(--ink-3);
+      letter-spacing: 0.04em;
+    }
+    .quote-attr strong { color: var(--ink-2); font-weight: 500; }
+
+    /* ═══════════════════════════════════════════════
+       CONTACT CTA
+    ═══════════════════════════════════════════════ */
+    .contact-cta {
+      background: #0F0F0D;
+      color: var(--bg);
+      padding: 160px 48px;
+      text-align: center;
+    }
+    .contact-cta .eyebrow { color: rgba(245,244,240,0.36); }
+
+    .contact-invite {
+      font-family: var(--serif);
+      font-size: clamp(36px, 5.6vw, 74px);
+      font-weight: 400;
+      line-height: 1.08;
+      letter-spacing: -0.026em;
+      max-width: 680px;
+      margin: 18px auto 56px;
+    }
+    .contact-invite em { font-style: italic; }
+
+    .contact-links {
+      display: flex;
+      gap: 28px;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .contact-link {
+      color: rgba(245,244,240,0.85);
+      text-decoration: none;
+      font-size: 16px;
+      font-weight: 300;
+      border-bottom: 1px solid rgba(245,244,240,0.25);
+      padding-bottom: 2px;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .contact-link:hover {
+      color: #fff;
+      border-color: rgba(245,244,240,0.7);
+    }
+    .contact-sep { color: rgba(245,244,240,0.2); font-size: 22px; }
+
+    /* ═══════════════════════════════════════════════
+       FOOTER
+    ═══════════════════════════════════════════════ */
+    footer {
+      background: #0A0A09;
+      padding: 72px 0 48px;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 48px;
+    }
+    .footer-logo {
+      font-family: var(--serif);
+      font-size: 20px;
+      color: rgba(245,244,240,0.88);
+      margin-bottom: 14px;
+    }
+    .footer-tagline {
+      font-size: 13px;
+      color: rgba(245,244,240,0.38);
+      line-height: 1.65;
+      font-weight: 300;
+      max-width: 230px;
+    }
+    .footer-col h4 {
+      font-size: 10.5px;
+      font-weight: 500;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+      color: rgba(245,244,240,0.3);
+      margin-bottom: 20px;
+    }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 11px; }
+    .footer-col a {
+      font-size: 13px;
+      color: rgba(245,244,240,0.5);
+      text-decoration: none;
+      font-weight: 300;
+      transition: color 0.2s;
+    }
+    .footer-col a:hover { color: rgba(245,244,240,0.88); }
+
+    .footer-bottom {
+      margin-top: 64px;
+      padding-top: 24px;
+      border-top: 1px solid rgba(245,244,240,0.07);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: rgba(245,244,240,0.28);
+      font-weight: 300;
+    }
+
+    /* ═══════════════════════════════════════════════
+       RESPONSIVE
+    ═══════════════════════════════════════════════ */
+    @media (max-width: 960px) {
+      nav { padding: 20px 24px; }
+      .container { padding: 0 28px; }
+      section { padding: 96px 0; }
+
+      .services-grid { grid-template-columns: 1fr; gap: 52px; }
+
+      .work-grid { grid-template-columns: 1fr 1fr; }
+      .work-item:nth-child(1) { grid-column: 1 / -1; }
+      .work-item:nth-child(4) { grid-column: auto; }
+      .work-item:nth-child(1) .work-card { aspect-ratio: 16/8; }
+
+      .process-intro { grid-template-columns: 1fr; gap: 20px; }
+
+      .team-grid { grid-template-columns: repeat(2, 1fr); }
+
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: 40px; }
+
+      .nav-links .hide-sm { display: none; }
+    }
+
+    @media (max-width: 640px) {
+      .container { padding: 0 20px; }
+      section { padding: 72px 0; }
+      nav { padding: 18px 20px; }
+
+      .work-grid { grid-template-columns: 1fr; }
+      .work-item:nth-child(1),
+      .work-item:nth-child(4) { grid-column: auto; }
+      .work-item:nth-child(1) .work-card,
+      .work-item:nth-child(4) .work-card { aspect-ratio: 4/3; }
+
+      .process-step { grid-template-columns: 48px 1fr; gap: 20px; }
+
+      .footer-grid { grid-template-columns: 1fr; }
+
+      .testimonial { padding: 100px 20px; }
+      .contact-cta, .hero { padding-left: 20px; padding-right: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── NAV ──────────────────────────────────── -->
+  <nav id="nav">
+    <a href="#" class="nav-logo">crafyne</a>
+    <ul class="nav-links">
+      <li class="hide-sm"><a href="#work">Work</a></li>
+      <li class="hide-sm"><a href="#process">Process</a></li>
+      <li class="hide-sm"><a href="#team">Team</a></li>
+      <li><a href="#contact" class="nav-cta">Start a project</a></li>
+    </ul>
+  </nav>
+
+  <!-- ── HERO ─────────────────────────────────── -->
+  <section class="hero" id="hero">
+    <p class="hero-tag reveal">Software Studio — Est. 2020</p>
+    <h1 class="hero-headline reveal d1">
+      We build software<br>for people who care<br><em>how it feels.</em>
+    </h1>
+    <p class="hero-sub reveal d2">
+      A small, senior team of engineers and designers. We take on three projects a year.
+    </p>
+    <div class="hero-actions reveal d3">
+      <a href="#contact" class="btn-primary">Start a project</a>
+      <a href="#work" class="btn-ghost">See our work <span class="arr">→</span></a>
+    </div>
+  </section>
+
+  <!-- ── PROOF STRIP ───────────────────────────── -->
+  <div class="proof">
+    <div class="proof-inner">
+      <span class="proof-item">Meridian</span>
+      <span class="proof-item">Holm Systems</span>
+      <span class="proof-item">Verdant</span>
+      <span class="proof-item">Croft</span>
+      <span class="proof-item">Stratum</span>
+      <span class="proof-item">Oriel</span>
+      <span class="proof-item">Fenwick &amp; Co.</span>
+    </div>
+  </div>
+
+  <!-- ── WHAT WE DO ────────────────────────────── -->
+  <section id="services">
+    <div class="container">
+      <span class="eyebrow reveal">What we do</span>
+      <div class="services-grid">
+
+        <div class="reveal d1">
+          <p class="service-num">01</p>
+          <div class="service-rule"></div>
+          <h3 class="service-name">Product Engineering</h3>
+          <p class="service-desc">Full-stack web and mobile applications, built to last. We obsess over performance, reliability, and the small details that make software feel effortless. No shortcuts that come back to haunt you six months later.</p>
+        </div>
+
+        <div class="reveal d2">
+          <p class="service-num">02</p>
+          <div class="service-rule"></div>
+          <h3 class="service-name">Design Systems</h3>
+          <p class="service-desc">The invisible scaffolding that lets your product scale without losing its soul. Tokens, components, documentation, and the processes that keep consistency effortless as your team grows.</p>
+        </div>
+
+        <div class="reveal d3">
+          <p class="service-num">03</p>
+          <div class="service-rule"></div>
+          <h3 class="service-name">AI Integration</h3>
+          <p class="service-desc">Thoughtful AI features that genuinely change what your product can do — not AI for its own sake. We identify where intelligence creates real leverage, and we build it carefully.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SELECTED WORK ─────────────────────────── -->
+  <section id="work" style="padding-top: 0;">
+    <div class="container">
+      <span class="eyebrow reveal">Selected work</span>
+      <div class="work-grid">
+
+        <div class="work-item reveal">
+          <div class="work-card">
+            <div class="work-img img-a"></div>
+            <div class="work-shade"></div>
+            <div class="work-meta">
+              <div class="work-client">Meridian</div>
+              <div class="work-detail">Platform rebuild — 2024</div>
+            </div>
+          </div>
+          <div class="work-caption">
+            <div>
+              <div class="work-caption-name">Meridian</div>
+              <div class="work-caption-outcome">Rebuilt core platform. Load times down 80%.</div>
+            </div>
+            <div class="work-caption-year">2024</div>
+          </div>
+        </div>
+
+        <div class="work-item reveal d1">
+          <div class="work-card">
+            <div class="work-img img-b"></div>
+            <div class="work-shade"></div>
+            <div class="work-meta">
+              <div class="work-client">Holm Systems</div>
+              <div class="work-detail">Design system — 2024</div>
+            </div>
+          </div>
+          <div class="work-caption">
+            <div>
+              <div class="work-caption-name">Holm Systems</div>
+              <div class="work-caption-outcome">Design system for 40+ product teams.</div>
+            </div>
+            <div class="work-caption-year">2024</div>
+          </div>
+        </div>
+
+        <div class="work-item reveal d1">
+          <div class="work-card">
+            <div class="work-img img-c"></div>
+            <div class="work-shade"></div>
+            <div class="work-meta">
+              <div class="work-client">Verdant</div>
+              <div class="work-detail">AI integration — 2023</div>
+            </div>
+          </div>
+          <div class="work-caption">
+            <div>
+              <div class="work-caption-name">Verdant</div>
+              <div class="work-caption-outcome">AI recommendations — engagement up 3×.</div>
+            </div>
+            <div class="work-caption-year">2023</div>
+          </div>
+        </div>
+
+        <div class="work-item reveal d2">
+          <div class="work-card">
+            <div class="work-img img-d"></div>
+            <div class="work-shade"></div>
+            <div class="work-meta">
+              <div class="work-client">Croft</div>
+              <div class="work-detail">Consumer launch — 2023</div>
+            </div>
+          </div>
+          <div class="work-caption">
+            <div>
+              <div class="work-caption-name">Croft</div>
+              <div class="work-caption-outcome">Zero to 100k users in ten weeks.</div>
+            </div>
+            <div class="work-caption-year">2023</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── HOW WE WORK ───────────────────────────── -->
+  <section class="process" id="process">
+    <div class="container">
+      <div class="process-intro">
+        <div>
+          <span class="eyebrow reveal" style="margin-bottom: 28px;">How we work</span>
+          <h2 class="process-headline reveal d1">
+            Process is just<br>discipline made<br><em>repeatable.</em>
+          </h2>
+        </div>
+        <p class="process-lede reveal d2">
+          We don't have a framework to sell you. We have a set of habits that we've found produce good work — refined across five years of shipping products for teams that care about craft.
+        </p>
+      </div>
+
+      <div class="process-steps">
+        <div class="process-step reveal">
+          <div class="step-num">01</div>
+          <div class="step-body">
+            <h3>Understand</h3>
+            <p>We begin by listening more than talking. What does success look like? Who are we building for? What are the actual constraints — not imagined ones? The first week is the most important week of any project, and we treat it that way.</p>
+          </div>
+        </div>
+        <div class="process-step reveal">
+          <div class="step-num">02</div>
+          <div class="step-body">
+            <h3>Design</h3>
+            <p>We prototype fast and with low fidelity. The goal isn't a beautiful deck — it's an honest answer to whether this will work. We'd rather find the hard problem in Figma than in production, and we'd rather show you something rough that's right than something polished that's wrong.</p>
+          </div>
+        </div>
+        <div class="process-step reveal">
+          <div class="step-num">03</div>
+          <div class="step-body">
+            <h3>Build</h3>
+            <p>Careful, test-driven development. We move deliberately and document as we go. We prefer simple solutions that age well over clever ones that don't. Code is written for the next engineer, not just the current deadline.</p>
+          </div>
+        </div>
+        <div class="process-step reveal">
+          <div class="step-num">04</div>
+          <div class="step-body">
+            <h3>Ship</h3>
+            <p>We don't hand over a zip file and disappear. Launch is the beginning of the learning cycle. We stay close for the first month, watch what the data says, and make sure what we built actually does what we said it would.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── TEAM ──────────────────────────────────── -->
+  <section id="team">
+    <div class="container">
+      <span class="eyebrow reveal">The team</span>
+      <div class="team-grid">
+        <div class="team-member reveal">
+          <div class="team-photo ph-1">J</div>
+          <div class="team-name">James Rowe</div>
+          <div class="team-role">Founder, Engineering</div>
+        </div>
+        <div class="team-member reveal d1">
+          <div class="team-photo ph-2">M</div>
+          <div class="team-name">Mara Tanaka</div>
+          <div class="team-role">Design Lead</div>
+        </div>
+        <div class="team-member reveal d2">
+          <div class="team-photo ph-3">L</div>
+          <div class="team-name">Leon Kuipers</div>
+          <div class="team-role">Full-Stack Engineer</div>
+        </div>
+        <div class="team-member reveal d3">
+          <div class="team-photo ph-4">S</div>
+          <div class="team-name">Suki Watanabe</div>
+          <div class="team-role">AI &amp; Infrastructure</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── TESTIMONIAL ───────────────────────────── -->
+  <section class="testimonial">
+    <div class="container">
+      <span class="quote-mark reveal">"</span>
+      <blockquote class="quote-body reveal d1">
+        Working with Crafyne felt like finally having engineers who understood that the product is more than just features. They built something we're genuinely proud of.
+      </blockquote>
+      <p class="quote-attr reveal d2">
+        <strong>Elina Vosch</strong> &mdash; CEO, Meridian
+      </p>
+    </div>
+  </section>
+
+  <!-- ── CONTACT CTA ───────────────────────────── -->
+  <section class="contact-cta" id="contact">
+    <span class="eyebrow reveal">Let's work together</span>
+    <h2 class="contact-invite reveal d1">
+      Let's make something<br><em>worth making.</em>
+    </h2>
+    <div class="contact-links reveal d2">
+      <a href="mailto:hello@crafyne.co" class="contact-link">hello@crafyne.co</a>
+      <span class="contact-sep">—</span>
+      <a href="#" class="contact-link">Book a call</a>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ────────────────────────────────── -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <div class="footer-logo">crafyne</div>
+          <p class="footer-tagline">A software studio for people who care how it feels. Based in Amsterdam, working globally.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Work</h4>
+          <ul>
+            <li><a href="#">Meridian</a></li>
+            <li><a href="#">Holm Systems</a></li>
+            <li><a href="#">Verdant</a></li>
+            <li><a href="#">Croft</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Studio</h4>
+          <ul>
+            <li><a href="#process">Process</a></li>
+            <li><a href="#team">Team</a></li>
+            <li><a href="#">Writing</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Connect</h4>
+          <ul>
+            <li><a href="#">Twitter / X</a></li>
+            <li><a href="#">LinkedIn</a></li>
+            <li><a href="#">GitHub</a></li>
+            <li><a href="mailto:hello@crafyne.co">hello@crafyne.co</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2025 Crafyne Studio. All rights reserved.</span>
+        <span>Amsterdam, The Netherlands</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Nav scroll border
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 24);
+    }, { passive: true });
+
+    // Scroll reveal via IntersectionObserver
+    const revealEls = document.querySelectorAll('.reveal');
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('is-visible');
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.08, rootMargin: '0px 0px -32px 0px' });
+
+    revealEls.forEach(el => io.observe(el));
+
+    // Hero cursor glow
+    const hero = document.getElementById('hero');
+    hero.addEventListener('mousemove', (e) => {
+      const r = hero.getBoundingClientRect();
+      hero.style.setProperty('--gx', ((e.clientX - r.left) / r.width  * 100) + '%');
+      hero.style.setProperty('--gy', ((e.clientY - r.top)  / r.height * 100) + '%');
+    });
+    hero.addEventListener('mouseleave', () => {
+      hero.style.setProperty('--gx', '50%');
+      hero.style.setProperty('--gy', '46%');
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,81 @@
+import Link from 'next/link'
+import { createClient } from '@/lib/supabase/server'
+import AdminHeader from '@/components/admin/AdminHeader'
+import DeleteButton from '@/components/admin/DeleteButton'
+import { deleteCaseStudy } from '@/lib/actions/content'
+
+export default async function CaseStudiesPage() {
+  const supabase = await createClient()
+  const { data: items } = await supabase
+    .from('case_studies')
+    .select('id, slug, client, year, outcome, published, featured, display_order')
+    .order('display_order', { ascending: true })
+
+  return (
+    <div>
+      <AdminHeader
+        title="Case Studies"
+        action={
+          <Link href="/admin/case-studies/new"
+            className="bg-[#111] text-[#F5F4F0] px-4 py-2 rounded-md text-sm font-medium hover:opacity-80 transition">
+            + New
+          </Link>
+        }
+      />
+
+      <div className="p-8">
+        {!items?.length ? (
+          <p className="text-sm text-[#aaa]">No case studies yet.</p>
+        ) : (
+          <div className="bg-white border border-black/8 rounded-lg overflow-hidden">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-black/8 text-xs text-[#888] uppercase tracking-wide">
+                  <th className="text-left px-5 py-3 font-medium">Client</th>
+                  <th className="text-left px-5 py-3 font-medium">Year</th>
+                  <th className="text-left px-5 py-3 font-medium">Outcome</th>
+                  <th className="text-left px-5 py-3 font-medium">Status</th>
+                  <th className="px-5 py-3" />
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-black/[0.04]">
+                {items.map(item => (
+                  <tr key={item.id} className="hover:bg-black/[0.02] transition">
+                    <td className="px-5 py-3.5">
+                      <span className="font-medium text-[#111]">{item.client}</span>
+                      {item.featured && (
+                        <span className="ml-2 text-[10px] bg-[#7A9E89]/15 text-[#7A9E89] px-1.5 py-0.5 rounded uppercase tracking-wide">
+                          Featured
+                        </span>
+                      )}
+                    </td>
+                    <td className="px-5 py-3.5 text-[#888]">{item.year}</td>
+                    <td className="px-5 py-3.5 text-[#888] max-w-xs truncate">{item.outcome}</td>
+                    <td className="px-5 py-3.5">
+                      <span className={`text-xs px-2 py-0.5 rounded-full ${
+                        item.published
+                          ? 'bg-green-50 text-green-700'
+                          : 'bg-black/5 text-[#888]'
+                      }`}>
+                        {item.published ? 'Published' : 'Draft'}
+                      </span>
+                    </td>
+                    <td className="px-5 py-3.5">
+                      <div className="flex items-center gap-4 justify-end">
+                        <Link href={`/admin/case-studies/${item.id}`}
+                          className="text-xs text-[#555] hover:text-[#111] transition">
+                          Edit
+                        </Link>
+                        <DeleteButton action={deleteCaseStudy} id={item.id} />
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}

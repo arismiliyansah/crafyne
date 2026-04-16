@@ -1,0 +1,75 @@
+import Link from 'next/link'
+import { createClient } from '@/lib/supabase/server'
+import AdminHeader from '@/components/admin/AdminHeader'
+import DeleteButton from '@/components/admin/DeleteButton'
+import { deletePost } from '@/lib/actions/content'
+
+export default async function BlogPage() {
+  const supabase = await createClient()
+  const { data: posts } = await supabase
+    .from('posts')
+    .select('id, title, slug, excerpt, published, published_at, created_at')
+    .order('created_at', { ascending: false })
+
+  return (
+    <div>
+      <AdminHeader
+        title="Blog"
+        action={
+          <Link href="/admin/blog/new"
+            className="bg-[#111] text-[#F5F4F0] px-4 py-2 rounded-md text-sm font-medium hover:opacity-80 transition">
+            + New post
+          </Link>
+        }
+      />
+
+      <div className="p-8">
+        {!posts?.length ? (
+          <p className="text-sm text-[#aaa]">No posts yet.</p>
+        ) : (
+          <div className="bg-white border border-black/8 rounded-lg overflow-hidden">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-black/8 text-xs text-[#888] uppercase tracking-wide">
+                  <th className="text-left px-5 py-3 font-medium">Title</th>
+                  <th className="text-left px-5 py-3 font-medium">Date</th>
+                  <th className="text-left px-5 py-3 font-medium">Status</th>
+                  <th className="px-5 py-3" />
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-black/[0.04]">
+                {posts.map(post => (
+                  <tr key={post.id} className="hover:bg-black/[0.02] transition">
+                    <td className="px-5 py-3.5">
+                      <p className="font-medium text-[#111]">{post.title}</p>
+                      <p className="text-xs text-[#aaa] mt-0.5">/{post.slug}</p>
+                    </td>
+                    <td className="px-5 py-3.5 text-[#888] text-xs">
+                      {post.published_at
+                        ? new Date(post.published_at).toLocaleDateString('en-US', { day:'numeric', month:'short', year:'numeric' })
+                        : '—'}
+                    </td>
+                    <td className="px-5 py-3.5">
+                      <span className={`text-xs px-2 py-0.5 rounded-full ${
+                        post.published ? 'bg-green-50 text-green-700' : 'bg-black/5 text-[#888]'
+                      }`}>
+                        {post.published ? 'Published' : 'Draft'}
+                      </span>
+                    </td>
+                    <td className="px-5 py-3.5">
+                      <div className="flex items-center gap-4 justify-end">
+                        <Link href={`/admin/blog/${post.id}`}
+                          className="text-xs text-[#555] hover:text-[#111] transition">Edit</Link>
+                        <DeleteButton action={deletePost} id={post.id} />
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
