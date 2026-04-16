@@ -159,12 +159,12 @@ export default function RichTextEditor({
   // ── Link handlers ────────────────────────────────────────────────────────
   const currentLink = editor.getAttributes('link').href ?? ''
   function applyLink(url: string) {
-    if (!url) { editor.chain().focus().unsetLink().run(); setLinkDialog(false); return }
-    editor.chain().focus().setLink({ href: url }).run()
+    if (!url) { editor!.chain().focus().unsetLink().run(); setLinkDialog(false); return }
+    editor!.chain().focus().setLink({ href: url }).run()
     setLinkDialog(false)
   }
   function applyImage(url: string, alt: string) {
-    editor.chain().focus().setImage({ src: url, alt }).run()
+    editor!.chain().focus().setImage({ src: url, alt }).run()
     setImageDialog(false)
   }
 

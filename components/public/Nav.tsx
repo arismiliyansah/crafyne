@@ -89,11 +89,12 @@ export default function Nav() {
               key={l.href}
               href={l.href}
               onClick={() => setOpen(false)}
-              className="font-serif text-[clamp(32px,8vw,48px)] text-ink tracking-[-0.02em] hover:text-ink-2 transition"
-              style={{ transitionDelay: open ? `${i * 60}ms` : '0ms',
-                       opacity: open ? 1 : 0,
-                       transform: open ? 'none' : 'translateY(12px)',
-                       transition: `opacity 0.4s ease ${i * 60}ms, transform 0.4s ease ${i * 60}ms, color 0.2s` }}
+              className="font-serif text-[clamp(32px,8vw,48px)] text-ink tracking-[-0.02em] hover:text-ink-2"
+              style={{
+                opacity: open ? 1 : 0,
+                transform: open ? 'none' : 'translateY(12px)',
+                transition: `opacity 0.4s ease ${i * 60}ms, transform 0.4s ease ${i * 60}ms, color 0.2s`,
+              }}
             >
               {l.label}
             </Link>
@@ -101,11 +102,12 @@ export default function Nav() {
           <Link
             href="/#contact"
             onClick={() => setOpen(false)}
-            className="mt-4 bg-ink text-bg px-8 py-3.5 rounded-full text-[15px] font-medium hover:opacity-80 transition"
-            style={{ transitionDelay: open ? `${links.length * 60}ms` : '0ms',
-                     opacity: open ? 1 : 0,
-                     transform: open ? 'none' : 'translateY(12px)',
-                     transition: `opacity 0.4s ease ${links.length * 60}ms, transform 0.4s ease ${links.length * 60}ms` }}
+            className="mt-4 bg-ink text-bg px-8 py-3.5 rounded-full text-[15px] font-medium hover:opacity-80"
+            style={{
+              opacity: open ? 1 : 0,
+              transform: open ? 'none' : 'translateY(12px)',
+              transition: `opacity 0.4s ease ${links.length * 60}ms, transform 0.4s ease ${links.length * 60}ms`,
+            }}
           >
             Start a project
           </Link>
