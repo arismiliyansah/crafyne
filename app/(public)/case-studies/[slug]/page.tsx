@@ -9,8 +9,12 @@ import BackToTop from '@/components/public/BackToTop'
 export const revalidate = 60
 
 export async function generateStaticParams() {
-  const items = await getCaseStudies(true, true)
-  return items.map(cs => ({ slug: cs.slug }))
+  try {
+    const items = await getCaseStudies(true, true)
+    return items.map(cs => ({ slug: cs.slug }))
+  } catch {
+    return []
+  }
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
