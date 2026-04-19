@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import AdminHeader from '@/components/admin/AdminHeader'
 import { Input, Textarea, Toggle, SubmitButton } from '@/components/admin/FormField'
+import ImageUpload from '@/components/admin/ImageUpload'
 import { upsertCaseStudy } from '@/lib/actions/content'
 
 export default async function EditCaseStudy({ params }: { params: Promise<{ id: string }> }) {
@@ -25,7 +26,7 @@ export default async function EditCaseStudy({ params }: { params: Promise<{ id: 
           <Input label="Outcome" name="outcome" defaultValue={cs.outcome ?? ''} />
           <Textarea label="Challenge" name="challenge" rows={4} defaultValue={cs.challenge ?? ''} />
           <Textarea label="Solution" name="solution" rows={4} defaultValue={cs.solution ?? ''} />
-          <Input label="Cover Image URL" name="cover_image_url" type="url" defaultValue={cs.cover_image_url ?? ''} />
+          <ImageUpload label="Cover Image" name="cover_image_url" folder="case-studies" defaultValue={cs.cover_image_url ?? ''} />
           <Input label="Live project URL" name="project_url" type="url" defaultValue={cs.project_url ?? ''} hint="Optional — link to the live site or product" />
           <Input label="Tags" name="tags" defaultValue={cs.tags?.join(', ') ?? ''} hint="Separate with commas" />
           <Input label="Display order" name="display_order" type="number" defaultValue={cs.display_order} />

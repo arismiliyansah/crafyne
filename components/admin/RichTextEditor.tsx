@@ -9,6 +9,21 @@ import TextAlign from '@tiptap/extension-text-align'
 import Typography from '@tiptap/extension-typography'
 import Placeholder from '@tiptap/extension-placeholder'
 import { useEffect, useRef, useState } from 'react'
+import { createClient } from '@/lib/supabase/client'
+
+const ACCEPT = 'image/jpeg,image/png,image/webp,image/gif,image/svg+xml'
+const MAX_BYTES = 10 * 1024 * 1024
+
+async function uploadImage(file: File): Promise<string> {
+  if (!ACCEPT.split(',').includes(file.type)) throw new Error('Unsupported file type')
+  if (file.size > MAX_BYTES) throw new Error('File too large (max 10 MB)')
+  const supabase = createClient()
+  const ext = file.name.split('.').pop()?.toLowerCase() || 'png'
+  const key = `blog/${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}.${ext}`
+  const { error } = await supabase.storage.from('media').upload(key, file, { cacheControl: '31536000', upsert: false })
+  if (error) throw error
+  return supabase.storage.from('media').getPublicUrl(key).data.publicUrl
+}
 
 // ── Icons ──────────────────────────────────────────────────────────────────
 function Icon({ d, size = 14 }: { d: string; size?: number }) {
@@ -83,17 +98,53 @@ function ImageDialog({ onConfirm, onClose }: {
 }) {
   const [url, setUrl] = useState('')
   const [alt, setAlt] = useState('')
+  const [busy, setBusy] = useState(false)
+  const [err, setErr] = useState<string | null>(null)
+  const fileRef = useRef<HTMLInputElement>(null)
+
+  async function onPickFile(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    e.target.value = ''
+    if (!file) return
+    setErr(null)
+    setBusy(true)
+    try {
+      const uploaded = await uploadImage(file)
+      setUrl(uploaded)
+    } catch (ex) {
+      setErr(ex instanceof Error ? ex.message : 'Upload failed')
+    } finally {
+      setBusy(false)
+    }
+  }
+
   return (
-    <div className="absolute top-full left-0 mt-1 z-50 bg-white border border-black/12 rounded-lg shadow-lg p-3 flex flex-col gap-2 min-w-[300px]">
+    <div className="absolute top-full left-0 mt-1 z-50 bg-white border border-black/12 rounded-lg shadow-lg p-3 flex flex-col gap-2 min-w-[320px]">
+      <input ref={fileRef} type="file" accept={ACCEPT} onChange={onPickFile} className="sr-only" />
+      <button
+        type="button"
+        onClick={() => fileRef.current?.click()}
+        disabled={busy}
+        className={`text-xs py-2 px-3 rounded border border-dashed text-center transition ${
+          busy ? 'border-black/10 text-[#aaa]' : 'border-black/20 text-[#555] hover:border-[#7A9E89] hover:text-[#111]'
+        }`}
+      >
+        {busy ? 'Uploading…' : '↑ Upload from computer'}
+      </button>
+      <div className="flex items-center gap-2 text-[10px] text-[#bbb] uppercase tracking-wider">
+        <span className="flex-1 h-px bg-black/8" />or<span className="flex-1 h-px bg-black/8" />
+      </div>
       <input autoFocus value={url} onChange={e => setUrl(e.target.value)}
-        placeholder="Image URL (https://...)"
+        placeholder="Paste image URL (https://...)"
         className="text-sm px-2 py-1.5 border border-black/12 rounded focus:outline-none focus:border-[#4D8F6A]" />
       <input value={alt} onChange={e => setAlt(e.target.value)}
         placeholder="Alt text (optional)"
         className="text-sm px-2 py-1.5 border border-black/12 rounded focus:outline-none focus:border-[#4D8F6A]" />
+      {err && <p className="text-xs text-[#c43]">{err}</p>}
       <div className="flex gap-2">
         <button type="button" onClick={() => url && onConfirm(url, alt)}
-          className="flex-1 py-1.5 bg-[#111] text-white text-sm rounded hover:opacity-80 transition">
+          disabled={!url || busy}
+          className="flex-1 py-1.5 bg-[#111] text-white text-sm rounded hover:opacity-80 transition disabled:opacity-40">
           Insert
         </button>
         <button type="button" onClick={onClose}

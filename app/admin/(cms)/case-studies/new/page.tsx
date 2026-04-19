@@ -1,5 +1,6 @@
 import AdminHeader from '@/components/admin/AdminHeader'
 import { Input, Textarea, Toggle, SubmitButton } from '@/components/admin/FormField'
+import ImageUpload from '@/components/admin/ImageUpload'
 import { upsertCaseStudy } from '@/lib/actions/content'
 
 export default function NewCaseStudy() {
@@ -17,7 +18,7 @@ export default function NewCaseStudy() {
           <Input label="Outcome" name="outcome" placeholder="Load times down 80%" />
           <Textarea label="Challenge" name="challenge" rows={4} placeholder="What problem did the client face..." />
           <Textarea label="Solution" name="solution" rows={4} placeholder="How we solved it..." />
-          <Input label="Cover Image URL" name="cover_image_url" type="url" placeholder="https://..." />
+          <ImageUpload label="Cover Image" name="cover_image_url" folder="case-studies" />
           <Input label="Live project URL" name="project_url" type="url" placeholder="https://..." hint="Optional — link to the live site or product" />
           <Input label="Tags" name="tags" placeholder="react, nextjs, design-system" hint="Separate with commas" />
           <Input label="Display order" name="display_order" type="number" defaultValue="0" />

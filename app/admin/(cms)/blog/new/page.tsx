@@ -1,5 +1,6 @@
 import AdminHeader from '@/components/admin/AdminHeader'
 import { Input, Textarea, Toggle, SubmitButton } from '@/components/admin/FormField'
+import ImageUpload from '@/components/admin/ImageUpload'
 import RichTextEditor from '@/components/admin/RichTextEditor'
 import { upsertPost } from '@/lib/actions/content'
 
@@ -20,7 +21,7 @@ export default function NewPost() {
             <RichTextEditor name="content" placeholder="Start writing..." />
           </div>
 
-          <Input label="Cover Image URL" name="cover_image_url" type="url" placeholder="https://..." />
+          <ImageUpload label="Cover Image" name="cover_image_url" folder="blog" />
           <Toggle label="Published" name="published" />
           <div className="pt-2">
             <SubmitButton label="Save Post" />

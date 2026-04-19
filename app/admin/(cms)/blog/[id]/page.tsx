@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import AdminHeader from '@/components/admin/AdminHeader'
 import { Input, Textarea, Toggle, SubmitButton } from '@/components/admin/FormField'
+import ImageUpload from '@/components/admin/ImageUpload'
 import RichTextEditor from '@/components/admin/RichTextEditor'
 import { upsertPost } from '@/lib/actions/content'
 
@@ -28,7 +29,7 @@ export default async function EditPost({ params }: { params: Promise<{ id: strin
             <RichTextEditor name="content" defaultValue={post.content ?? ''} />
           </div>
 
-          <Input label="Cover Image URL" name="cover_image_url" type="url" defaultValue={post.cover_image_url ?? ''} />
+          <ImageUpload label="Cover Image" name="cover_image_url" folder="blog" defaultValue={post.cover_image_url ?? ''} />
           <Toggle label="Published" name="published" defaultChecked={post.published} />
           <div className="pt-2">
             <SubmitButton label="Save Changes" />
