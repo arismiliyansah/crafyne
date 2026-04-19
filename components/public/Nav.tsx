@@ -67,7 +67,7 @@ export default function Nav() {
         <button
           className="md:hidden flex flex-col justify-center items-center w-8 h-8 gap-[5px] z-[60]"
           onClick={() => setOpen(v => !v)}
-          aria-label={open ? 'Tutup menu' : 'Buka menu'}
+          aria-label={open ? 'Close menu' : 'Open menu'}
         >
           <span className={`block w-5 h-px bg-ink transition-all duration-300 origin-center
             ${open ? 'rotate-45 translate-y-[6px]' : ''}`} />

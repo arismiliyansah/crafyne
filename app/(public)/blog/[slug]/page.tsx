@@ -29,6 +29,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   return {
     title: post.title,
     description: post.excerpt ?? '',
+    alternates: { canonical: `/blog/${slug}` },
     openGraph: {
       type: 'article',
       title: post.title,
@@ -61,9 +62,20 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     publisher: { '@type': 'Organization', name: 'Crafyne', url: 'https://crafyne.com' },
   }
 
+  const breadcrumbLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://crafyne.com' },
+      { '@type': 'ListItem', position: 2, name: 'Blog', item: 'https://crafyne.com/blog' },
+      { '@type': 'ListItem', position: 3, name: post.title, item: `https://crafyne.com/blog/${post.slug}` },
+    ],
+  }
+
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
       <Nav />
       <BackToTop />
       <main className="pt-28 pb-32">

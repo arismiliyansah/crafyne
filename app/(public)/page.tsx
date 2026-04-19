@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import Image from 'next/image'
 import { getSettings, getServices, getCaseStudies, getTeam, getTestimonials } from '@/lib/supabase/queries'
@@ -8,6 +9,9 @@ import InquiryForm from '@/components/public/InquiryForm'
 import TestimonialCarousel from '@/components/public/TestimonialCarousel'
 
 export const revalidate = 60
+export const metadata: Metadata = {
+  alternates: { canonical: '/' },
+}
 
 const GRADIENT_MAPS = ['img-a', 'img-b', 'img-c', 'img-d']
 const AVATAR_COLORS = ['#8BA899', '#9A8BA3', '#A8998B', '#8B9EA8']
@@ -31,8 +35,16 @@ export default async function HomePage() {
     logo: 'https://crafyne.com/og-image.png',
     description: settings.agency_tagline ?? 'A small, senior team of engineers and designers building software for people who care how it feels.',
     email: settings.agency_email ?? undefined,
+    contactPoint: settings.agency_email ? {
+      '@type': 'ContactPoint',
+      email: settings.agency_email,
+      contactType: 'customer support',
+      availableLanguage: ['English'],
+    } : undefined,
     sameAs: [
       settings.footer_instagram_url,
+      settings.footer_facebook_url,
+      settings.footer_threads_url,
       settings.footer_github_url,
     ].filter((url): url is string => Boolean(url) && url !== '#'),
   }

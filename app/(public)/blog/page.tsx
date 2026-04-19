@@ -7,6 +7,21 @@ export const revalidate = 60
 export const metadata: Metadata = {
   title: 'Blog',
   description: 'Thoughts on software, design, and craft from the Crafyne team.',
+  alternates: {
+    canonical: '/blog',
+    types: { 'application/rss+xml': '/feed.xml' },
+  },
+  openGraph: {
+    type: 'website',
+    title: 'Blog — Crafyne',
+    description: 'Thoughts on software, design, and craft from the Crafyne team.',
+    url: '/blog',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Crafyne Blog' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    images: ['/og-image.png'],
+  },
 }
 
 const PAGE_SIZE = 5
@@ -25,7 +40,7 @@ export default async function BlogPage() {
           </h1>
 
           {total === 0 ? (
-            <p className="text-[15px] text-ink-3 font-light">Belum ada artikel.</p>
+            <p className="text-[15px] text-ink-3 font-light">No posts yet.</p>
           ) : (
             <BlogList initialPosts={posts} initialTotal={total} />
           )}

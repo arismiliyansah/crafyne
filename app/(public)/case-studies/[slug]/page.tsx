@@ -20,7 +20,27 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params
   const cs = await getCaseStudyBySlug(slug)
-  return { title: cs?.client ?? 'Case Study', description: cs?.outcome ?? '' }
+  if (!cs) return { title: 'Case Study' }
+
+  const ogImage = cs.cover_image_url
+    ? [{ url: cs.cover_image_url, width: 1200, height: 630, alt: cs.client }]
+    : [{ url: '/og-image.png', width: 1200, height: 630, alt: cs.client }]
+
+  return {
+    title: cs.client,
+    description: cs.outcome ?? '',
+    alternates: { canonical: `/case-studies/${slug}` },
+    openGraph: {
+      type: 'article',
+      title: cs.client,
+      description: cs.outcome ?? '',
+      images: ogImage,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      images: ogImage.map(i => i.url),
+    },
+  }
 }
 
 export default async function CaseStudyPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -28,8 +48,32 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
   const cs = await getCaseStudyBySlug(slug)
   if (!cs) notFound()
 
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'CreativeWork',
+    name: cs.client,
+    description: cs.outcome ?? undefined,
+    image: cs.cover_image_url ?? undefined,
+    dateCreated: cs.year ? String(cs.year) : undefined,
+    creator: { '@type': 'Organization', name: 'Crafyne', url: 'https://crafyne.com' },
+    keywords: cs.tags?.length ? cs.tags.join(', ') : undefined,
+    url: `https://crafyne.com/case-studies/${cs.slug}`,
+  }
+
+  const breadcrumbLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://crafyne.com' },
+      { '@type': 'ListItem', position: 2, name: 'Work', item: 'https://crafyne.com/#work' },
+      { '@type': 'ListItem', position: 3, name: cs.client, item: `https://crafyne.com/case-studies/${cs.slug}` },
+    ],
+  }
+
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
       <Nav />
       <BackToTop />
       <main className="pt-28 pb-32">

@@ -4,6 +4,7 @@ import Nav from '@/components/public/Nav'
 export const metadata: Metadata = {
   title: 'Privacy Policy',
   description: 'How Crafyne collects, stores, and protects your personal data.',
+  alternates: { canonical: '/privacy' },
 }
 
 export default function PrivacyPage() {
