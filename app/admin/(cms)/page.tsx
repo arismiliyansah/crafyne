@@ -26,7 +26,7 @@ export default async function AdminDashboard() {
   ]
 
   return (
-    <div className="p-8 max-w-4xl">
+    <div className="p-4 sm:p-6 md:p-8 max-w-4xl">
       <h1 className="font-serif text-2xl text-[#111] mb-1 tracking-[-0.01em]">Dashboard</h1>
       <p className="text-sm text-[#888] mb-10 font-light">Welcome to Crafyne CMS.</p>
 

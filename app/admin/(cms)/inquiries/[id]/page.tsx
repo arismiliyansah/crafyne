@@ -42,7 +42,7 @@ export default async function InquiryDetailPage({ params }: { params: Promise<{ 
         backHref="/admin/inquiries"
       />
 
-      <div className="p-8 max-w-3xl grid grid-cols-1 md:grid-cols-[1fr_320px] gap-8">
+      <div className="p-4 sm:p-6 md:p-8 max-w-3xl grid grid-cols-1 md:grid-cols-[1fr_320px] gap-6 md:gap-8">
 
         {/* Left: submitted details */}
         <div className="space-y-6">

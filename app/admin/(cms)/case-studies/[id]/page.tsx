@@ -14,7 +14,7 @@ export default async function EditCaseStudy({ params }: { params: Promise<{ id: 
   return (
     <div>
       <AdminHeader title={`Edit: ${cs.client}`} backHref="/admin/case-studies" />
-      <div className="p-8 max-w-2xl">
+      <div className="p-4 sm:p-6 md:p-8 max-w-2xl">
         <form action={upsertCaseStudy} className="space-y-6">
           <input type="hidden" name="id" value={cs.id} />
           <div className="grid grid-cols-2 gap-4">

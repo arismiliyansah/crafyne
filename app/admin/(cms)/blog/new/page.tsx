@@ -8,7 +8,7 @@ export default function NewPost() {
   return (
     <div>
       <AdminHeader title="New Post" backHref="/admin/blog" />
-      <div className="p-8 max-w-3xl">
+      <div className="p-4 sm:p-6 md:p-8 max-w-3xl">
         <form action={upsertPost} className="space-y-6">
           <Input label="Title" name="title" required placeholder="Article title" />
           <Input label="Slug" name="slug" required placeholder="article-title" hint="URL: /blog/article-title" />

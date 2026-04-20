@@ -14,7 +14,7 @@ export default async function TestimonialsPage() {
   return (
     <div>
       <AdminHeader title="Testimonials" />
-      <div className="p-8 max-w-3xl space-y-8">
+      <div className="p-4 sm:p-6 md:p-8 max-w-3xl space-y-8">
 
         {items?.map(t => (
           <div key={t.id} className="bg-white border border-black/8 rounded-lg p-6">

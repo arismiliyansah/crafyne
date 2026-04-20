@@ -7,7 +7,7 @@ export default function NewCaseStudy() {
   return (
     <div>
       <AdminHeader title="New Case Study" backHref="/admin/case-studies" />
-      <div className="p-8 max-w-2xl">
+      <div className="p-4 sm:p-6 md:p-8 max-w-2xl">
         <form action={upsertCaseStudy} className="space-y-6">
           <div className="grid grid-cols-2 gap-4">
             <Input label="Client" name="client" required placeholder="Client name" />

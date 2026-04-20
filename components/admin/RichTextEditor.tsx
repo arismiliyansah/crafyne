@@ -227,7 +227,7 @@ export default function RichTextEditor({
       <div className="border border-black/12 rounded-lg overflow-hidden bg-white">
         {/* Toolbar */}
         <div ref={toolbarRef}
-          className="relative flex flex-wrap items-center gap-0.5 px-3 py-2 border-b border-black/8 bg-[#fafafa]">
+          className="relative flex items-center gap-0.5 px-3 py-2 border-b border-black/8 bg-[#fafafa] overflow-x-auto whitespace-nowrap">
 
           {/* Undo / Redo */}
           <Btn title="Undo" onClick={() => editor.chain().focus().undo().run()}>

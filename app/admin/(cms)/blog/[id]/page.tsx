@@ -15,7 +15,7 @@ export default async function EditPost({ params }: { params: Promise<{ id: strin
   return (
     <div>
       <AdminHeader title={`Edit: ${post.title}`} backHref="/admin/blog" />
-      <div className="p-8 max-w-3xl">
+      <div className="p-4 sm:p-6 md:p-8 max-w-3xl">
         <form action={upsertPost} className="space-y-6">
           <input type="hidden" name="id" value={post.id} />
           <Input label="Title" name="title" required defaultValue={post.title} />

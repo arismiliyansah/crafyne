@@ -15,7 +15,7 @@ export default async function TeamPage() {
   return (
     <div>
       <AdminHeader title="Team" />
-      <div className="p-8 max-w-3xl space-y-10">
+      <div className="p-4 sm:p-6 md:p-8 max-w-3xl space-y-10">
 
         {/* List */}
         {members?.map(m => (

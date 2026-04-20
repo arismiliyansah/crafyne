@@ -11,7 +11,7 @@ export default async function SettingsPage() {
   return (
     <div>
       <AdminHeader title="Settings" />
-      <div className="p-8 max-w-2xl">
+      <div className="p-4 sm:p-6 md:p-8 max-w-2xl">
         <form action={saveSettings} className="space-y-10">
 
           <section>

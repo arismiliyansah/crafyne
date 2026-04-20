@@ -23,12 +23,12 @@ export default async function BlogPage() {
         }
       />
 
-      <div className="p-8">
+      <div className="p-4 sm:p-6 md:p-8">
         {!posts?.length ? (
           <p className="text-sm text-[#aaa]">No posts yet.</p>
         ) : (
-          <div className="bg-white border border-black/8 rounded-lg overflow-hidden">
-            <table className="w-full text-sm">
+          <div className="bg-white border border-black/8 rounded-lg overflow-x-auto">
+            <table className="w-full text-sm min-w-[640px]">
               <thead>
                 <tr className="border-b border-black/8 text-xs text-[#888] uppercase tracking-wide">
                   <th className="text-left px-5 py-3 font-medium">Title</th>
