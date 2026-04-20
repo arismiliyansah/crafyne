@@ -78,14 +78,14 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
       <Nav />
       <BackToTop />
-      <main className="pt-28 pb-32">
-        <div className="max-w-[720px] mx-auto px-8">
+      <main className="pt-24 md:pt-28 pb-20 md:pb-32">
+        <div className="max-w-[720px] mx-auto px-5 sm:px-8">
 
-          <Link href="/blog" className="text-[13px] text-ink-3 hover:text-ink transition mb-12 inline-flex items-center gap-1.5">
+          <Link href="/blog" className="text-[13px] text-ink-3 hover:text-ink transition mb-10 md:mb-12 inline-flex items-center gap-1.5">
             ← Writing
           </Link>
 
-          <div className="mt-6 mb-14">
+          <div className="mt-6 mb-10 md:mb-14">
             <p className="text-[12px] font-medium tracking-[0.11em] uppercase text-ink-3 mb-5">
               {post.published_at
                 ? new Date(post.published_at).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })
