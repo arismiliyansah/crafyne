@@ -7,7 +7,7 @@ import { logout } from '@/lib/actions/auth'
 
 const navItems = [
   { href: '/admin',              label: 'Dashboard',    icon: '▦' },
-  { href: '/admin/case-studies', label: 'Case Studies', icon: '◫' },
+  { href: '/admin/work',         label: 'Work',         icon: '◫' },
   { href: '/admin/blog',         label: 'Blog',         icon: '≡' },
   { href: '/admin/team',         label: 'Team',         icon: '○' },
   { href: '/admin/testimonials', label: 'Testimonial',  icon: '❝' },

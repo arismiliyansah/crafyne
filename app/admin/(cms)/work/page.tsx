@@ -4,7 +4,7 @@ import AdminHeader from '@/components/admin/AdminHeader'
 import DeleteButton from '@/components/admin/DeleteButton'
 import { deleteCaseStudy } from '@/lib/actions/content'
 
-export default async function CaseStudiesPage() {
+export default async function WorkAdminPage() {
   const supabase = await createClient()
   const { data: items } = await supabase
     .from('case_studies')
@@ -14,9 +14,9 @@ export default async function CaseStudiesPage() {
   return (
     <div>
       <AdminHeader
-        title="Case Studies"
+        title="Work"
         action={
-          <Link href="/admin/case-studies/new"
+          <Link href="/admin/work/new"
             className="bg-[#111] text-[#F5F4F0] px-4 py-2 rounded-md text-sm font-medium hover:opacity-80 transition">
             + New
           </Link>
@@ -25,7 +25,7 @@ export default async function CaseStudiesPage() {
 
       <div className="p-4 sm:p-6 md:p-8">
         {!items?.length ? (
-          <p className="text-sm text-[#aaa]">No case studies yet.</p>
+          <p className="text-sm text-[#aaa]">No projects yet.</p>
         ) : (
           <div className="bg-white border border-black/8 rounded-lg overflow-x-auto">
             <table className="w-full text-sm min-w-[640px]">
@@ -62,7 +62,7 @@ export default async function CaseStudiesPage() {
                     </td>
                     <td className="px-5 py-3.5">
                       <div className="flex items-center gap-4 justify-end">
-                        <Link href={`/admin/case-studies/${item.id}`}
+                        <Link href={`/admin/work/${item.id}`}
                           className="text-xs text-[#555] hover:text-[#111] transition">
                           Edit
                         </Link>

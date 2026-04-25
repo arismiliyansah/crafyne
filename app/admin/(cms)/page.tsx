@@ -18,7 +18,7 @@ export default async function AdminDashboard() {
   ])
 
   const stats = [
-    { label: 'Case Studies', value: csCount ?? 0, href: '/admin/case-studies', highlight: false },
+    { label: 'Work',         value: csCount ?? 0, href: '/admin/work', highlight: false },
     { label: 'Blog Posts',   value: postCount ?? 0, href: '/admin/blog', highlight: false },
     { label: 'Team',         value: teamCount ?? 0, href: '/admin/team', highlight: false },
     { label: 'Testimonials', value: testimonialCount ?? 0, href: '/admin/testimonials', highlight: false },
@@ -50,7 +50,7 @@ export default async function AdminDashboard() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {[
-          { href: '/admin/case-studies/new', label: '+ New case study' },
+          { href: '/admin/work/new',         label: '+ New project' },
           { href: '/admin/blog/new',         label: '+ New blog post' },
           { href: '/admin/settings',         label: '⚙ Edit hero & settings' },
           { href: '/',                       label: '↗ View website', target: '_blank' },

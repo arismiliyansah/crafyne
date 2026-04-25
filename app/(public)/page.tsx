@@ -151,7 +151,7 @@ export default async function HomePage() {
                 const gradient = gradients[GRADIENT_MAPS[i % 4]]
                 return (
                   <ScrollReveal key={cs.id} delay={i <= 2 ? i as 0 | 1 | 2 : 2}>
-                    <Link href={`/case-studies/${cs.slug}`} className="group block">
+                    <Link href={`/work/${cs.slug}`} className="group block">
                       <div className="relative overflow-hidden rounded-[3px] aspect-[3/2]">
                         {cs.cover_image_url ? (
                           <Image
@@ -202,7 +202,7 @@ export default async function HomePage() {
                     delay={i === 0 ? 0 : i <= 2 ? 1 : 2}
                     className={`${isFirst ? 'col-span-2' : ''} ${isFourth ? 'col-span-2 col-start-2' : ''}`}
                   >
-                    <Link href={`/case-studies/${cs.slug}`} className="group block">
+                    <Link href={`/work/${cs.slug}`} className="group block">
                       <div className={`relative overflow-hidden rounded-[3px] ${
                         isFirst || isFourth ? 'aspect-[3/2]' : 'aspect-[4/3]'
                       }`}>
@@ -382,7 +382,7 @@ export default async function HomePage() {
                 heading: 'Work',
                 links: [
                   { label: 'All work', href: '/work' },
-                  ...caseStudies.slice(0, 4).map(cs => ({ label: cs.name, href: `/case-studies/${cs.slug}` })),
+                  ...caseStudies.slice(0, 4).map(cs => ({ label: cs.name, href: `/work/${cs.slug}` })),
                 ],
               },
               {

@@ -4,7 +4,7 @@ import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 
-// ── Case Studies ─────────────────────────────────────────────
+// ── Work / Case Studies ──────────────────────────────────────
 
 export async function upsertCaseStudy(formData: FormData) {
   const supabase = await createClient()
@@ -35,17 +35,19 @@ export async function upsertCaseStudy(formData: FormData) {
     await (supabase.from('case_studies') as any).insert(payload)
   }
 
-  revalidatePath('/admin/case-studies')
+  revalidatePath('/admin/work')
   revalidatePath('/')
-  redirect('/admin/case-studies')
+  revalidatePath('/work')
+  redirect('/admin/work')
 }
 
 export async function deleteCaseStudy(id: string) {
   const supabase = await createClient()
   await supabase.from('case_studies').delete().eq('id', id)
-  revalidatePath('/admin/case-studies')
+  revalidatePath('/admin/work')
   revalidatePath('/')
-  redirect('/admin/case-studies')
+  revalidatePath('/work')
+  redirect('/admin/work')
 }
 
 // ── Blog Posts ───────────────────────────────────────────────

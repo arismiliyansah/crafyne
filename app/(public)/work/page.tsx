@@ -48,7 +48,7 @@ export default async function WorkPage() {
       itemListElement: items.map((cs, i) => ({
         '@type': 'ListItem',
         position: i + 1,
-        url: `https://crafyne.com/case-studies/${cs.slug}`,
+        url: `https://crafyne.com/work/${cs.slug}`,
         name: cs.name,
       })),
     },
@@ -86,7 +86,7 @@ export default async function WorkPage() {
                 const gradient = GRADIENTS[i % GRADIENTS.length]
                 return (
                   <ScrollReveal key={cs.id} delay={Math.min(i, 3) as 0 | 1 | 2 | 3}>
-                    <Link href={`/case-studies/${cs.slug}`} className="group block">
+                    <Link href={`/work/${cs.slug}`} className="group block">
                       <div className="relative overflow-hidden rounded-[3px] aspect-[4/3]">
                         {cs.cover_image_url ? (
                           <Image

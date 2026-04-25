@@ -20,7 +20,7 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params
   const cs = await getCaseStudyBySlug(slug)
-  if (!cs) return { title: 'Case Study' }
+  if (!cs) return { title: 'Project' }
 
   const ogImage = cs.cover_image_url
     ? [{ url: cs.cover_image_url, width: 1200, height: 630, alt: cs.name }]
@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   return {
     title: cs.name,
     description: cs.outcome ?? '',
-    alternates: { canonical: `/case-studies/${slug}` },
+    alternates: { canonical: `/work/${slug}` },
     openGraph: {
       type: 'article',
       title: cs.name,
@@ -60,7 +60,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
     dateCreated: cs.year ? String(cs.year) : undefined,
     creator: { '@type': 'Organization', name: 'Crafyne', url: 'https://crafyne.com' },
     keywords: cs.tags?.length ? cs.tags.join(', ') : undefined,
-    url: `https://crafyne.com/case-studies/${cs.slug}`,
+    url: `https://crafyne.com/work/${cs.slug}`,
   }
 
   const breadcrumbLd = {
@@ -69,7 +69,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://crafyne.com' },
       { '@type': 'ListItem', position: 2, name: 'Work', item: 'https://crafyne.com/work' },
-      { '@type': 'ListItem', position: 3, name: cs.name, item: `https://crafyne.com/case-studies/${cs.slug}` },
+      { '@type': 'ListItem', position: 3, name: cs.name, item: `https://crafyne.com/work/${cs.slug}` },
     ],
   }
 
@@ -181,11 +181,11 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
             </div>
           )}
 
-          {/* Next case study */}
+          {/* Next project */}
           {nextCs && (
             <section className="mt-14 md:mt-20 pt-8 md:pt-10 border-t border-black/8">
               <p className="text-[11px] font-medium tracking-[0.13em] uppercase text-ink-3 mb-5">Next project</p>
-              <Link href={`/case-studies/${nextCs.slug}`} className="group flex items-center justify-between gap-6">
+              <Link href={`/work/${nextCs.slug}`} className="group flex items-center justify-between gap-6">
                 <div className="min-w-0">
                   <p className="font-serif text-[22px] md:text-[28px] tracking-[-0.01em] mb-1 group-hover:text-ink-2 transition truncate">
                     {nextCs.name}
