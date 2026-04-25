@@ -10,6 +10,7 @@ type Props = {
   defaultValue?: string
   folder?: string
   hint?: string
+  aspect?: string
 }
 
 const ACCEPT = 'image/jpeg,image/png,image/webp,image/gif,image/svg+xml'
@@ -23,7 +24,7 @@ function makeKey(folder: string, file: File) {
 }
 
 export default function ImageUpload({
-  label, name, defaultValue = '', folder = 'misc', hint,
+  label, name, defaultValue = '', folder = 'misc', hint, aspect = 'aspect-[16/9]',
 }: Props) {
   const [url, setUrl] = useState(defaultValue)
   const [busy, setBusy] = useState(false)
@@ -96,7 +97,7 @@ export default function ImageUpload({
 
       {url ? (
         <div className="relative group rounded-md overflow-hidden border border-black/12 bg-[#fafafa]">
-          <div className="relative w-full aspect-[16/9]">
+          <div className={`relative w-full ${aspect}`}>
             <NextImage
               src={url}
               alt=""
@@ -136,7 +137,7 @@ export default function ImageUpload({
           onDragLeave={() => setDrag(false)}
           onDrop={onDrop}
           disabled={busy}
-          className={`w-full aspect-[16/9] flex flex-col items-center justify-center gap-2 rounded-md border-2 border-dashed transition ${
+          className={`w-full ${aspect} flex flex-col items-center justify-center gap-2 rounded-md border-2 border-dashed transition ${
             drag
               ? 'border-[#7A9E89] bg-[#7A9E89]/5'
               : 'border-black/15 bg-[#fafafa] hover:border-black/30 hover:bg-white'

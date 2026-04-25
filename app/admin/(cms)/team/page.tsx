@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server'
 import AdminHeader from '@/components/admin/AdminHeader'
 import DeleteButton from '@/components/admin/DeleteButton'
 import { Input, Textarea, Toggle, SubmitButton } from '@/components/admin/FormField'
+import ImageUpload from '@/components/admin/ImageUpload'
 import { upsertTeamMember, deleteTeamMember } from '@/lib/actions/content'
 
 export default async function TeamPage() {
@@ -36,11 +37,13 @@ export default async function TeamPage() {
             </div>
             <form action={upsertTeamMember} className="grid grid-cols-2 gap-4">
               <input type="hidden" name="id" value={m.id} />
+              <div className="col-span-2 max-w-[200px]">
+                <ImageUpload label="Photo" name="photo_url" folder="team" defaultValue={m.photo_url ?? ''} aspect="aspect-[3/4]" />
+              </div>
               <Input label="Name" name="name" required defaultValue={m.name} />
               <Input label="Role" name="role" required defaultValue={m.role} />
               <Input label="LinkedIn URL" name="linkedin_url" defaultValue={m.linkedin_url ?? ''} />
               <Input label="GitHub URL" name="github_url" defaultValue={m.github_url ?? ''} />
-              <Input label="Photo URL" name="photo_url" defaultValue={m.photo_url ?? ''} />
               <Input label="Order" name="display_order" type="number" defaultValue={m.display_order} />
               <div className="col-span-2">
                 <Textarea label="Bio" name="bio" rows={2} defaultValue={m.bio ?? ''} />
@@ -61,11 +64,13 @@ export default async function TeamPage() {
           </summary>
           <div className="px-6 pb-6 pt-2 border-t border-black/8">
             <form action={upsertTeamMember} className="grid grid-cols-2 gap-4">
+              <div className="col-span-2 max-w-[200px]">
+                <ImageUpload label="Photo" name="photo_url" folder="team" aspect="aspect-[3/4]" />
+              </div>
               <Input label="Name" name="name" required placeholder="Full name" />
               <Input label="Role" name="role" required placeholder="Jabatan" />
               <Input label="LinkedIn URL" name="linkedin_url" placeholder="https://linkedin.com/in/..." />
               <Input label="GitHub URL" name="github_url" placeholder="https://github.com/..." />
-              <Input label="Photo URL" name="photo_url" placeholder="https://..." />
               <Input label="Order" name="display_order" type="number" defaultValue="0" />
               <div className="col-span-2">
                 <Textarea label="Bio" name="bio" rows={2} placeholder="Short bio..." />
