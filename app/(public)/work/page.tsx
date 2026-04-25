@@ -49,7 +49,7 @@ export default async function WorkPage() {
         '@type': 'ListItem',
         position: i + 1,
         url: `https://crafyne.com/case-studies/${cs.slug}`,
-        name: cs.client,
+        name: cs.name,
       })),
     },
   }
@@ -91,7 +91,7 @@ export default async function WorkPage() {
                         {cs.cover_image_url ? (
                           <Image
                             src={cs.cover_image_url}
-                            alt={cs.client}
+                            alt={cs.name}
                             fill
                             sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                             className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
@@ -108,7 +108,7 @@ export default async function WorkPage() {
                       </div>
                       <div className="flex justify-between items-start pt-4">
                         <div>
-                          <p className="font-serif text-[16px] text-ink mb-0.5">{cs.client}</p>
+                          <p className="font-serif text-[16px] text-ink mb-0.5">{cs.name}</p>
                           <p className="text-[13px] text-ink-3 font-light">{cs.outcome ?? cs.tagline}</p>
                         </div>
                         <span className="text-[12.5px] text-ink-3 font-light pt-0.5">{cs.year}</span>

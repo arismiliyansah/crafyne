@@ -8,7 +8,7 @@ export default async function CaseStudiesPage() {
   const supabase = await createClient()
   const { data: items } = await supabase
     .from('case_studies')
-    .select('id, slug, client, year, outcome, published, featured, display_order')
+    .select('id, slug, name, year, outcome, published, featured, display_order')
     .order('display_order', { ascending: true })
 
   return (
@@ -31,7 +31,7 @@ export default async function CaseStudiesPage() {
             <table className="w-full text-sm min-w-[640px]">
               <thead>
                 <tr className="border-b border-black/8 text-xs text-[#888] uppercase tracking-wide">
-                  <th className="text-left px-5 py-3 font-medium">Client</th>
+                  <th className="text-left px-5 py-3 font-medium">Name</th>
                   <th className="text-left px-5 py-3 font-medium">Year</th>
                   <th className="text-left px-5 py-3 font-medium">Outcome</th>
                   <th className="text-left px-5 py-3 font-medium">Status</th>
@@ -42,7 +42,7 @@ export default async function CaseStudiesPage() {
                 {items.map(item => (
                   <tr key={item.id} className="hover:bg-black/[0.02] transition">
                     <td className="px-5 py-3.5">
-                      <span className="font-medium text-[#111]">{item.client}</span>
+                      <span className="font-medium text-[#111]">{item.name}</span>
                       {item.featured && (
                         <span className="ml-2 text-[10px] bg-[#7A9E89]/15 text-[#7A9E89] px-1.5 py-0.5 rounded uppercase tracking-wide">
                           Featured

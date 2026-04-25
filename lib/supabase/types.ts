@@ -7,7 +7,7 @@ export interface Database {
         Row: {
           id: string
           slug: string
-          client: string
+          name: string
           year: number | null
           tagline: string | null
           outcome: string | null

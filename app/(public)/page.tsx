@@ -156,7 +156,7 @@ export default async function HomePage() {
                         {cs.cover_image_url ? (
                           <Image
                             src={cs.cover_image_url}
-                            alt={cs.client}
+                            alt={cs.name}
                             fill
                             sizes="100vw"
                             className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
@@ -166,13 +166,13 @@ export default async function HomePage() {
                         )}
                         <div className="absolute inset-0 bg-gradient-to-t from-black/55 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                         <div className="absolute bottom-5 left-5 right-5 text-white opacity-0 translate-y-1.5 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
-                          <p className="font-serif text-[19px] tracking-[-0.01em]">{cs.client}</p>
+                          <p className="font-serif text-[19px] tracking-[-0.01em]">{cs.name}</p>
                           <p className="text-[12px] opacity-70 mt-0.5 font-light">{cs.tagline}</p>
                         </div>
                       </div>
                       <div className="flex justify-between items-start pt-4">
                         <div>
-                          <p className="font-serif text-[16px] text-ink mb-0.5">{cs.client}</p>
+                          <p className="font-serif text-[16px] text-ink mb-0.5">{cs.name}</p>
                           <p className="text-[13px] text-ink-3 font-light">{cs.outcome}</p>
                         </div>
                         <span className="text-[12.5px] text-ink-3 font-light pt-0.5">{cs.year}</span>
@@ -209,7 +209,7 @@ export default async function HomePage() {
                         {cs.cover_image_url ? (
                           <Image
                             src={cs.cover_image_url}
-                            alt={cs.client}
+                            alt={cs.name}
                             fill
                             sizes={isFirst || isFourth ? '(max-width: 768px) 100vw, 66vw' : '(max-width: 768px) 100vw, 33vw'}
                             className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
@@ -219,13 +219,13 @@ export default async function HomePage() {
                         )}
                         <div className="absolute inset-0 bg-gradient-to-t from-black/55 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                         <div className="absolute bottom-6 left-6 right-6 text-white opacity-0 translate-y-1.5 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
-                          <p className="font-serif text-[21px] tracking-[-0.01em]">{cs.client}</p>
+                          <p className="font-serif text-[21px] tracking-[-0.01em]">{cs.name}</p>
                           <p className="text-[12.5px] opacity-70 mt-0.5 font-light">{cs.tagline}</p>
                         </div>
                       </div>
                       <div className="flex justify-between items-start pt-4">
                         <div>
-                          <p className="font-serif text-[16px] text-ink mb-0.5">{cs.client}</p>
+                          <p className="font-serif text-[16px] text-ink mb-0.5">{cs.name}</p>
                           <p className="text-[13px] text-ink-3 font-light">{cs.outcome}</p>
                         </div>
                         <span className="text-[12.5px] text-ink-3 font-light pt-0.5">{cs.year}</span>
@@ -382,7 +382,7 @@ export default async function HomePage() {
                 heading: 'Work',
                 links: [
                   { label: 'All work', href: '/work' },
-                  ...caseStudies.slice(0, 4).map(cs => ({ label: cs.client, href: `/case-studies/${cs.slug}` })),
+                  ...caseStudies.slice(0, 4).map(cs => ({ label: cs.name, href: `/case-studies/${cs.slug}` })),
                 ],
               },
               {

@@ -12,13 +12,14 @@ export async function upsertCaseStudy(formData: FormData) {
 
   const payload = {
     slug:            (formData.get('slug') as string).trim(),
-    client:          (formData.get('client') as string).trim(),
+    name:            (formData.get('name') as string).trim(),
     year:            parseInt(formData.get('year') as string) || null,
     tagline:         (formData.get('tagline') as string) || null,
     outcome:         (formData.get('outcome') as string) || null,
     challenge:       (formData.get('challenge') as string) || null,
     solution:        (formData.get('solution') as string) || null,
     cover_image_url: (formData.get('cover_image_url') as string) || null,
+    gallery_urls:    formData.getAll('gallery_urls').filter(v => typeof v === 'string' && v.length > 0) as string[],
     project_url:     (formData.get('project_url') as string) || null,
     featured:        formData.get('featured') === 'on',
     published:       formData.get('published') === 'on',
