@@ -235,6 +235,18 @@ export default async function HomePage() {
                 )
               })}
             </div>
+
+            {caseStudies.length > 4 && (
+              <ScrollReveal>
+                <div className="mt-12 md:mt-16 flex justify-center md:justify-start">
+                  <Link href="/work"
+                    className="text-[13.5px] font-medium text-ink border-b border-ink/25 pb-px hover:border-ink/60 transition group inline-flex items-center gap-1.5">
+                    View all work
+                    <span className="inline-block transition-transform group-hover:translate-x-1">→</span>
+                  </Link>
+                </div>
+              </ScrollReveal>
+            )}
           </div>
         </section>
       )}
@@ -368,7 +380,10 @@ export default async function HomePage() {
             {[
               {
                 heading: 'Work',
-                links: caseStudies.slice(0, 4).map(cs => ({ label: cs.client, href: `/case-studies/${cs.slug}` })),
+                links: [
+                  { label: 'All work', href: '/work' },
+                  ...caseStudies.slice(0, 4).map(cs => ({ label: cs.client, href: `/case-studies/${cs.slug}` })),
+                ],
               },
               {
                 heading: 'Studio',
