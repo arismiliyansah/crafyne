@@ -10,6 +10,8 @@ export interface Database {
           name: string
           year: number | null
           tagline: string | null
+          kind: string | null
+          summary: string | null
           outcome: string | null
           challenge: string | null
           solution: string | null
@@ -64,11 +66,76 @@ export interface Database {
           author_name: string
           author_role: string | null
           author_company: string | null
+          rating: number
           featured: boolean
           display_order: number
         }
         Insert: Omit<Database['public']['Tables']['testimonials']['Row'], 'id'>
         Update: Partial<Database['public']['Tables']['testimonials']['Insert']>
+      }
+      services: {
+        Row: {
+          id: string
+          title: string
+          body: string
+          bullets: string[]
+          tone: string
+          glyph: string | null
+          span: string
+          display_order: number
+          active: boolean
+        }
+        Insert: Omit<Database['public']['Tables']['services']['Row'], 'id'>
+        Update: Partial<Database['public']['Tables']['services']['Insert']>
+      }
+      stats: {
+        Row: {
+          id: string
+          value: number
+          suffix: string
+          decimals: number
+          label: string
+          display_order: number
+        }
+        Insert: Omit<Database['public']['Tables']['stats']['Row'], 'id'>
+        Update: Partial<Database['public']['Tables']['stats']['Insert']>
+      }
+      pricing_tiers: {
+        Row: {
+          id: string
+          name: string
+          tag: string | null
+          price: string
+          unit: string | null
+          blurb: string | null
+          features: string[]
+          tone: string
+          cta_label: string
+          featured: boolean
+          display_order: number
+        }
+        Insert: Omit<Database['public']['Tables']['pricing_tiers']['Row'], 'id'>
+        Update: Partial<Database['public']['Tables']['pricing_tiers']['Insert']>
+      }
+      tech_groups: {
+        Row: {
+          id: string
+          label: string
+          items: string[]
+          display_order: number
+        }
+        Insert: Omit<Database['public']['Tables']['tech_groups']['Row'], 'id'>
+        Update: Partial<Database['public']['Tables']['tech_groups']['Insert']>
+      }
+      faqs: {
+        Row: {
+          id: string
+          question: string
+          answer: string
+          display_order: number
+        }
+        Insert: Omit<Database['public']['Tables']['faqs']['Row'], 'id'>
+        Update: Partial<Database['public']['Tables']['faqs']['Insert']>
       }
       site_settings: {
         Row: { key: string; value: string | null; updated_at: string }
@@ -88,7 +155,16 @@ export type SiteSetting = Database['public']['Tables']['site_settings']['Row']
 
 export type SiteSettings = Record<string, string>
 
-export interface Service {
+// New table convenience types (redesign)
+export type Service     = Database['public']['Tables']['services']['Row']
+export type Stat        = Database['public']['Tables']['stats']['Row']
+export type PricingTier = Database['public']['Tables']['pricing_tiers']['Row']
+export type TechGroup   = Database['public']['Tables']['tech_groups']['Row']
+export type Faq         = Database['public']['Tables']['faqs']['Row']
+
+// Legacy settings-JSON service shape — used only by the old homepage until it is
+// replaced; removed in the page-assembly step.
+export interface LegacyService {
   order: number
   name: string
   description: string
