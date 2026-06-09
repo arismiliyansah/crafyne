@@ -12,6 +12,10 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Vendored design handoff (reference prototypes, not app source):
+    "docs/**",
+    // CommonJS production entrypoint (not part of the Next/TS app surface):
+    "server.js",
   ]),
 ]);
 
