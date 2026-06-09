@@ -1,0 +1,132 @@
+/* Crafyne — design tokens & base */
+:root {
+  --crimson: #B91C1C;
+  --crimson-deep: #931414;
+  --peach: #FFD9CF;
+  --peach-soft: #FFE9E2;
+  --orange: #FB923C;
+  --orange-deep: #F97316;
+  --navy: #0E1530;
+  --navy-2: #161E3D;
+  --cream: #FFF6EE;
+  --paper: #FBF5EC;
+  --ink: #0F0A07;
+  --ink-soft: #2B2018;
+  --mute: #6B5E55;
+  --hair: rgba(15,10,7,0.08);
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--cream);
+  color: var(--ink);
+  font-family: "DM Sans", system-ui, sans-serif;
+  font-size: 17px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+img { max-width: 100%; display: block; }
+
+/* type */
+.display, .h1, .h2, .h3, .eyebrow, .nav__brand {
+  font-family: "Bricolage Grotesque", "DM Sans", system-ui, sans-serif;
+  font-variation-settings: "wdth" 90;
+  letter-spacing: -0.025em;
+}
+.italic { font-family: "Instrument Serif", serif; font-style: italic; font-weight: 400; letter-spacing: -0.01em; }
+.mono { font-family: "JetBrains Mono", ui-monospace, monospace; letter-spacing: -0.01em; }
+
+.eyebrow {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.wrap { max-width: 1280px; margin: 0 auto; padding: 0 28px; }
+.section { padding: 110px 0; }
+.section--tight { padding: 80px 0; }
+
+/* buttons */
+.btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 14px 22px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 15px;
+  text-decoration: none;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: transform .25s ease, background .25s ease, color .25s ease, box-shadow .25s ease;
+  white-space: nowrap;
+}
+.btn--ink { background: var(--ink); color: var(--cream); }
+.btn--ink:hover { transform: translateY(-2px); background: var(--crimson); }
+.btn--cream { background: var(--cream); color: var(--ink); }
+.btn--cream:hover { transform: translateY(-2px); background: white; }
+.btn--ghost { background: transparent; color: inherit; border-color: currentColor; }
+.btn--ghost:hover { background: var(--ink); color: var(--cream); border-color: var(--ink); }
+.btn--orange { background: var(--orange); color: var(--ink); }
+.btn--orange:hover { transform: translateY(-2px); background: var(--orange-deep); color: white; }
+.btn__arrow {
+  width: 22px; height: 22px; border-radius: 999px;
+  display: inline-grid; place-items: center;
+  background: currentColor;
+}
+.btn__arrow svg { width: 12px; height: 12px; }
+
+/* utility */
+.row { display: flex; }
+.between { justify-content: space-between; }
+.center { align-items: center; }
+.gap-8 { gap: 8px; } .gap-12 { gap: 12px; } .gap-16 { gap: 16px; }
+.grid { display: grid; }
+
+/* reveal anim — content visible by default; JS adds .js-reveal to opt-in to hidden state */
+.js-reveal.reveal { opacity: 0; transform: translateY(28px); transition: opacity .9s cubic-bezier(.2,.7,.2,1), transform .9s cubic-bezier(.2,.7,.2,1); }
+.js-reveal.reveal.in { opacity: 1; transform: none; }
+.reveal[data-d="1"] { transition-delay: 80ms; }
+.reveal[data-d="2"] { transition-delay: 160ms; }
+.reveal[data-d="3"] { transition-delay: 240ms; }
+.reveal[data-d="4"] { transition-delay: 320ms; }
+.reveal[data-d="5"] { transition-delay: 400ms; }
+.reveal[data-d="6"] { transition-delay: 480ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  .js-reveal.reveal, .reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
+}
+
+/* image placeholder */
+.placeholder {
+  position: relative;
+  background:
+    repeating-linear-gradient(45deg, rgba(255,255,255,.18) 0 8px, transparent 8px 16px),
+    linear-gradient(135deg, var(--peach-soft), var(--peach));
+  color: var(--ink);
+  display: grid; place-items: center;
+  overflow: hidden;
+}
+.placeholder--dark {
+  background:
+    repeating-linear-gradient(45deg, rgba(255,255,255,.08) 0 8px, transparent 8px 16px),
+    linear-gradient(135deg, var(--navy-2), var(--navy));
+  color: var(--peach-soft);
+}
+.placeholder__label {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.75;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.6);
+  backdrop-filter: blur(2px);
+}
+.placeholder--dark .placeholder__label { background: rgba(255,255,255,0.1); color: var(--cream); }
+
+/* selection */
+::selection { background: var(--crimson); color: var(--cream); }
