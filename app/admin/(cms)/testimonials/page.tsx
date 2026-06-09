@@ -40,7 +40,10 @@ export default async function TestimonialsPage() {
                 <Input label="Role" name="author_role" defaultValue={t.author_role ?? ''} />
                 <Input label="Company" name="author_company" defaultValue={t.author_company ?? ''} />
               </div>
-              <Input label="Order" name="display_order" type="number" defaultValue={t.display_order} />
+              <div className="grid grid-cols-2 gap-4">
+                <Input label="Order" name="display_order" type="number" defaultValue={t.display_order} />
+                <Input label="Rating (1–5)" name="rating" type="number" min={1} max={5} defaultValue={t.rating ?? 5} />
+              </div>
               <div className="flex items-center justify-between">
                 <Toggle label="Featured (shown on homepage)" name="featured" defaultChecked={t.featured} />
                 <SubmitButton label="Save" />
@@ -62,7 +65,10 @@ export default async function TestimonialsPage() {
                 <Input label="Role" name="author_role" placeholder="CEO" />
                 <Input label="Company" name="author_company" placeholder="Company name" />
               </div>
-              <Input label="Order" name="display_order" type="number" defaultValue="0" />
+              <div className="grid grid-cols-2 gap-4">
+                <Input label="Order" name="display_order" type="number" defaultValue="0" />
+                <Input label="Rating (1–5)" name="rating" type="number" min={1} max={5} defaultValue="5" />
+              </div>
               <div className="flex items-center justify-between">
                 <Toggle label="Featured" name="featured" />
                 <SubmitButton label="Add" />

@@ -24,7 +24,9 @@ export default async function EditProject({ params }: { params: Promise<{ id: st
           </div>
           <Input label="Slug" name="slug" required defaultValue={cs.slug} hint="URL: /work/slug" />
           <Input label="Tagline" name="tagline" defaultValue={cs.tagline ?? ''} />
-          <Input label="Outcome" name="outcome" defaultValue={cs.outcome ?? ''} />
+          <Input label="Kind" name="kind" defaultValue={cs.kind ?? ''} hint="Category label shown on the homepage card" />
+          <Textarea label="Summary" name="summary" rows={2} defaultValue={cs.summary ?? ''} hint="One-line teaser for the homepage work grid" />
+          <Input label="Outcome" name="outcome" defaultValue={cs.outcome ?? ''} hint="Metric shown on the card" />
           <Textarea label="Challenge" name="challenge" rows={4} defaultValue={cs.challenge ?? ''} />
           <Textarea label="Solution" name="solution" rows={4} defaultValue={cs.solution ?? ''} />
           <ImageUpload label="Cover Image" name="cover_image_url" folder="work" defaultValue={cs.cover_image_url ?? ''} />
