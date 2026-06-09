@@ -1,22 +1,11 @@
 import { createClient, createStaticClient } from './server'
-import type { CaseStudy, Post, TeamMember, Testimonial, SiteSettings, LegacyService, Service, Stat, PricingTier, TechGroup, Faq } from './types'
+import type { CaseStudy, Post, TeamMember, Testimonial, SiteSettings, Service, Stat, PricingTier, TechGroup, Faq } from './types'
 
 export async function getSettings(): Promise<SiteSettings> {
   const supabase = await createClient()
   const { data } = await supabase.from('site_settings').select('key, value')
   if (!data) return {}
   return Object.fromEntries((data as { key: string; value: string | null }[]).map(r => [r.key, r.value ?? '']))
-}
-
-// Legacy settings-JSON services — consumed only by the old homepage until it is
-// replaced by getServiceCards() below.
-export async function getServices(): Promise<LegacyService[]> {
-  const settings = await getSettings()
-  try {
-    return JSON.parse(settings.services ?? '[]') as LegacyService[]
-  } catch {
-    return []
-  }
 }
 
 export async function getServiceCards(): Promise<Service[]> {

@@ -162,14 +162,6 @@ export type PricingTier = Database['public']['Tables']['pricing_tiers']['Row']
 export type TechGroup   = Database['public']['Tables']['tech_groups']['Row']
 export type Faq         = Database['public']['Tables']['faqs']['Row']
 
-// Legacy settings-JSON service shape — used only by the old homepage until it is
-// replaced; removed in the page-assembly step.
-export interface LegacyService {
-  order: number
-  name: string
-  description: string
-}
-
 export interface ProjectInquiry {
   id: string
   name: string
