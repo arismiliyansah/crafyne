@@ -39,7 +39,19 @@ export default function CTA({ settings }: { settings: SiteSettings }) {
           </div>
         </div>
 
-        <div id="contact-form" style={{ marginTop: 56, maxWidth: 640, marginLeft: 'auto', marginRight: 'auto' }}>
+        <div
+          id="contact-form"
+          style={{
+            marginTop: 28,
+            maxWidth: 760,
+            marginLeft: 'auto',
+            marginRight: 'auto',
+            background: 'var(--navy)',
+            color: 'var(--cream)',
+            borderRadius: 24,
+            padding: 'clamp(28px, 5vw, 52px)',
+          }}
+        >
           <InquiryForm />
         </div>
       </div>
