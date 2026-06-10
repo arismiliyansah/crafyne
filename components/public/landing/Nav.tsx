@@ -1,14 +1,16 @@
 'use client'
 
+import Link from 'next/link'
 import { useState, useEffect } from 'react'
 
+// Absolute hrefs so the nav works from any page (hash links jump to homepage sections).
 const links = [
-  { href: '#work', label: 'Work' },
-  { href: '#services', label: 'Services' },
-  { href: '#process', label: 'Process' },
-  { href: '#pricing', label: 'Pricing' },
-  { href: '#team', label: 'Team' },
-  { href: '#faq', label: 'FAQ' },
+  { href: '/work', label: 'Work' },
+  { href: '/#services', label: 'Services' },
+  { href: '/#process', label: 'Process' },
+  { href: '/#pricing', label: 'Pricing' },
+  { href: '/blog', label: 'Journal' },
+  { href: '/#faq', label: 'FAQ' },
 ]
 
 export default function Nav({ email }: { email: string }) {
@@ -51,26 +53,26 @@ export default function Nav({ email }: { email: string }) {
   return (
     <nav className={'nav ' + (scrolled ? 'nav--scrolled ' : '') + (menuOpen ? 'nav--menu-open' : '')}>
       <div className="nav__inner wrap" style={{ height: '44px' }}>
-        <a href="#top" className="nav__brand" onClick={() => setMenuOpen(false)}>
+        <Link href="/" className="nav__brand" onClick={() => setMenuOpen(false)}>
           <span className="nav__mark" aria-hidden="true">
             <svg viewBox="0 0 24 24"><path d="M4 4h7a6 6 0 0 1 0 12H8l8 4H4z" fill="currentColor" /></svg>
           </span>
           <span data-brand-name>Crafyne</span>
           <span className="nav__brand-suffix mono">/studio</span>
-        </a>
+        </Link>
 
         <div className="nav__links" style={{ fontSize: '16px', fontWeight: 700 }}>
-          {links.map(l => (<a key={l.label} href={l.href}>{l.label}</a>))}
+          {links.map(l => (<Link key={l.label} href={l.href}>{l.label}</Link>))}
         </div>
 
         <div className="nav__cta">
           <a href={`mailto:${email}`} className="nav__login mono">{email}</a>
-          <a href="#contact" className="btn btn--ink nav__book">
+          <Link href="/#contact" className="btn btn--ink nav__book">
             Book a call
             <span className="btn__arrow" aria-hidden="true">
               <svg viewBox="0 0 12 12"><path d="M3 9 9 3M9 3H4M9 3v5" stroke="white" strokeWidth="1.5" fill="none" strokeLinecap="round" /></svg>
             </span>
-          </a>
+          </Link>
         </div>
 
         <button
@@ -95,23 +97,23 @@ export default function Nav({ email }: { email: string }) {
           <ul className="navMenu__list">
             {links.map((l, i) => (
               <li className="navMenu__item" key={l.label} style={{ transitionDelay: (menuOpen ? 0.12 + i * 0.05 : 0) + 's' }}>
-                <a href={l.href} onClick={() => setMenuOpen(false)}>
+                <Link href={l.href} onClick={() => setMenuOpen(false)}>
                   <span className="navMenu__num mono">/{String(i + 1).padStart(2, '0')}</span>
                   <span className="navMenu__label">{l.label}</span>
                   <span className="navMenu__arr" aria-hidden="true">
                     <svg viewBox="0 0 14 14"><path d="M3 11 11 3M11 3H5M11 3v6" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" /></svg>
                   </span>
-                </a>
+                </Link>
               </li>
             ))}
           </ul>
           <div className="navMenu__foot" style={{ transitionDelay: (menuOpen ? 0.12 + links.length * 0.05 : 0) + 's' }}>
-            <a href="#contact" className="btn btn--orange navMenu__cta" onClick={() => setMenuOpen(false)}>
+            <Link href="/#contact" className="btn btn--orange navMenu__cta" onClick={() => setMenuOpen(false)}>
               Book a call
               <span className="btn__arrow" aria-hidden="true">
                 <svg viewBox="0 0 12 12"><path d="M3 9 9 3M9 3H4M9 3v5" stroke="#0E1530" strokeWidth="1.6" fill="none" strokeLinecap="round" /></svg>
               </span>
-            </a>
+            </Link>
             <a className="navMenu__mail mono" href={`mailto:${email}`}>{email}</a>
           </div>
         </div>
