@@ -9,8 +9,8 @@ const links = [
   { href: '/#services', label: 'Services' },
   { href: '/#process', label: 'Process' },
   { href: '/#pricing', label: 'Pricing' },
+  { href: '/about', label: 'About' },
   { href: '/blog', label: 'Journal' },
-  { href: '/#faq', label: 'FAQ' },
 ]
 
 export default function Nav({ email }: { email: string }) {

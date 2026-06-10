@@ -33,7 +33,7 @@ export default function Footer({ settings }: { settings: SiteSettings }) {
             </div>
             <div className="foot__col">
               <div className="foot__h mono">Company</div>
-              <Link href="/#team">About</Link>
+              <Link href="/about">About</Link>
               <Link href="/blog">Journal</Link>
               <Link href="/contact">Contact</Link>
               <Link href="/#faq">FAQ</Link>
