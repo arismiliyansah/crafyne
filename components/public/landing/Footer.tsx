@@ -35,13 +35,13 @@ export default function Footer({ settings }: { settings: SiteSettings }) {
               <div className="foot__h mono">Company</div>
               <Link href="/#team">About</Link>
               <Link href="/blog">Journal</Link>
-              <Link href="/#contact">Contact</Link>
+              <Link href="/contact">Contact</Link>
               <Link href="/#faq">FAQ</Link>
             </div>
             <div className="foot__col">
               <div className="foot__h mono">Get in touch</div>
               <a className="mono" href={`mailto:${email}`}>{email}</a>
-              <Link className="mono" href="/#contact">Start a project</Link>
+              <Link className="mono" href="/contact">Start a project</Link>
               <div className="foot__social">
                 <a href="#" aria-label="LinkedIn">Li</a>
                 <a href="#" aria-label="X">X</a>

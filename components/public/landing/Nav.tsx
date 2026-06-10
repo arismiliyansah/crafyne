@@ -67,7 +67,7 @@ export default function Nav({ email }: { email: string }) {
 
         <div className="nav__cta">
           <a href={`mailto:${email}`} className="nav__login mono">{email}</a>
-          <Link href="/#contact" className="btn btn--ink nav__book">
+          <Link href="/contact" className="btn btn--ink nav__book">
             Book a call
             <span className="btn__arrow" aria-hidden="true">
               <svg viewBox="0 0 12 12"><path d="M3 9 9 3M9 3H4M9 3v5" stroke="white" strokeWidth="1.5" fill="none" strokeLinecap="round" /></svg>
@@ -108,7 +108,7 @@ export default function Nav({ email }: { email: string }) {
             ))}
           </ul>
           <div className="navMenu__foot" style={{ transitionDelay: (menuOpen ? 0.12 + links.length * 0.05 : 0) + 's' }}>
-            <Link href="/#contact" className="btn btn--orange navMenu__cta" onClick={() => setMenuOpen(false)}>
+            <Link href="/contact" className="btn btn--orange navMenu__cta" onClick={() => setMenuOpen(false)}>
               Book a call
               <span className="btn__arrow" aria-hidden="true">
                 <svg viewBox="0 0 12 12"><path d="M3 9 9 3M9 3H4M9 3v5" stroke="#0E1530" strokeWidth="1.6" fill="none" strokeLinecap="round" /></svg>
