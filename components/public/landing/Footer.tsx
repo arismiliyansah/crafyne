@@ -35,7 +35,7 @@ export default function Footer({ settings }: { settings: SiteSettings }) {
               <div className="foot__h mono">Company</div>
               <Link href="/about">About</Link>
               <Link href="/blog">Journal</Link>
-              <Link href="/contact">Contact</Link>
+              <Link href="/careers">Careers</Link>
               <Link href="/#faq">FAQ</Link>
             </div>
             <div className="foot__col">
