@@ -1,0 +1,67 @@
+name: Deploy to Hostinger
+
+# Builds the app in CI (Hostinger Cloud can run out of memory building Next.js),
+# then ships the lean standalone bundle to the Node.js app over SSH and restarts it.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build (standalone)
+        # NEXT_PUBLIC_* vars are inlined into the client bundle at build time, so they
+        # must be present here. Server-only secrets (RESEND_API_KEY, ADMIN_EMAIL) are
+        # set at runtime in the Hostinger Node app, not here.
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
+          NEXT_PUBLIC_UMAMI_WEBSITE_ID: ${{ secrets.NEXT_PUBLIC_UMAMI_WEBSITE_ID }}
+        run: npm run build
+
+      - name: Assemble standalone bundle
+        # `output: standalone` does not copy static assets or public/ — add them so the
+        # bundle is complete and self-running.
+        run: |
+          cp -r .next/static .next/standalone/.next/static
+          if [ -d public ]; then cp -r public .next/standalone/public; fi
+          cp package.json .next/standalone/package.json
+
+      - name: Set up SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.HOSTINGER_SSH_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -p "${{ secrets.HOSTINGER_SSH_PORT }}" -H "${{ secrets.HOSTINGER_SSH_HOST }}" >> ~/.ssh/known_hosts 2>/dev/null
+
+      - name: Deploy bundle (rsync over SSH)
+        run: |
+          rsync -az \
+            -e "ssh -i ~/.ssh/deploy_key -p ${{ secrets.HOSTINGER_SSH_PORT }}" \
+            .next/standalone/ \
+            "${{ secrets.HOSTINGER_SSH_USER }}@${{ secrets.HOSTINGER_SSH_HOST }}:${{ secrets.HOSTINGER_DEPLOY_PATH }}/"
+
+      - name: Restart Node app (Phusion Passenger)
+        # Hostinger's Node.js app is Passenger-managed: touching tmp/restart.txt triggers
+        # a graceful restart. If your panel uses a different mechanism, replace this step.
+        run: |
+          ssh -i ~/.ssh/deploy_key -p "${{ secrets.HOSTINGER_SSH_PORT }}" \
+            "${{ secrets.HOSTINGER_SSH_USER }}@${{ secrets.HOSTINGER_SSH_HOST }}" \
+            "mkdir -p '${{ secrets.HOSTINGER_DEPLOY_PATH }}/tmp' && touch '${{ secrets.HOSTINGER_DEPLOY_PATH }}/tmp/restart.txt'"
