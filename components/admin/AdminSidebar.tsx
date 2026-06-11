@@ -11,6 +11,11 @@ const navItems = [
   { href: '/admin/blog',         label: 'Blog',         icon: '≡' },
   { href: '/admin/team',         label: 'Team',         icon: '○' },
   { href: '/admin/testimonials', label: 'Testimonial',  icon: '❝' },
+  { href: '/admin/services',     label: 'Services',     icon: '✦' },
+  { href: '/admin/stats',        label: 'Stats',        icon: '№' },
+  { href: '/admin/pricing',      label: 'Pricing',      icon: '$' },
+  { href: '/admin/tech-stack',   label: 'Tech Stack',   icon: '⌗' },
+  { href: '/admin/faq',          label: 'FAQ',          icon: '?' },
   { href: '/admin/inquiries',    label: 'Inquiries',    icon: '✉' },
   { href: '/admin/settings',     label: 'Settings',     icon: '⚙' },
 ]

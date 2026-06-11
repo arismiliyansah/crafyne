@@ -1,5 +1,5 @@
 import { createClient, createStaticClient } from './server'
-import type { CaseStudy, Post, TeamMember, Testimonial, SiteSettings, Service } from './types'
+import type { CaseStudy, Post, TeamMember, Testimonial, SiteSettings, Service, Stat, PricingTier, TechGroup, Faq } from './types'
 
 export async function getSettings(): Promise<SiteSettings> {
   const supabase = await createClient()
@@ -8,13 +8,34 @@ export async function getSettings(): Promise<SiteSettings> {
   return Object.fromEntries((data as { key: string; value: string | null }[]).map(r => [r.key, r.value ?? '']))
 }
 
-export async function getServices(): Promise<Service[]> {
-  const settings = await getSettings()
-  try {
-    return JSON.parse(settings.services ?? '[]') as Service[]
-  } catch {
-    return []
-  }
+export async function getServiceCards(): Promise<Service[]> {
+  const supabase = await createClient()
+  const { data } = await supabase.from('services').select('*').eq('active', true).order('display_order', { ascending: true })
+  return (data ?? []) as Service[]
+}
+
+export async function getStats(): Promise<Stat[]> {
+  const supabase = await createClient()
+  const { data } = await supabase.from('stats').select('*').order('display_order', { ascending: true })
+  return (data ?? []) as Stat[]
+}
+
+export async function getPricingTiers(): Promise<PricingTier[]> {
+  const supabase = await createClient()
+  const { data } = await supabase.from('pricing_tiers').select('*').order('display_order', { ascending: true })
+  return (data ?? []) as PricingTier[]
+}
+
+export async function getTechGroups(): Promise<TechGroup[]> {
+  const supabase = await createClient()
+  const { data } = await supabase.from('tech_groups').select('*').order('display_order', { ascending: true })
+  return (data ?? []) as TechGroup[]
+}
+
+export async function getFaqs(): Promise<Faq[]> {
+  const supabase = await createClient()
+  const { data } = await supabase.from('faqs').select('*').order('display_order', { ascending: true })
+  return (data ?? []) as Faq[]
 }
 
 export async function getCaseStudies(publishedOnly = true, isStatic = false): Promise<CaseStudy[]> {

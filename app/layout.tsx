@@ -1,21 +1,19 @@
 import type { Metadata } from 'next'
-import { Instrument_Serif, Inter } from 'next/font/google'
+import { Bricolage_Grotesque, DM_Sans, Instrument_Serif, JetBrains_Mono } from 'next/font/google'
 import Script from 'next/script'
 import './globals.css'
 
-const serif = Instrument_Serif({
-  variable: '--font-serif',
-  subsets: ['latin'],
-  weight: ['400'],
-  style: ['normal', 'italic'],
-  display: 'swap',
+const display = Bricolage_Grotesque({
+  variable: '--font-display', subsets: ['latin'], weight: ['400', '500', '600', '700'], display: 'swap',
 })
-
-const sans = Inter({
-  variable: '--font-sans',
-  subsets: ['latin'],
-  weight: ['300', '400', '500'],
-  display: 'swap',
+const sans = DM_Sans({
+  variable: '--font-sans', subsets: ['latin'], weight: ['400', '500', '600', '700'], display: 'swap',
+})
+const serif = Instrument_Serif({
+  variable: '--font-serif', subsets: ['latin'], weight: ['400'], style: ['normal', 'italic'], display: 'swap',
+})
+const mono = JetBrains_Mono({
+  variable: '--font-mono', subsets: ['latin'], weight: ['400', '500'], display: 'swap',
 })
 
 export const metadata: Metadata = {
@@ -46,7 +44,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${serif.variable} ${sans.variable}`} data-scroll-behavior="smooth">
+    <html lang="en" className={`${display.variable} ${sans.variable} ${serif.variable} ${mono.variable}`} data-scroll-behavior="smooth">
       <body>
         {children}
         {process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID && (

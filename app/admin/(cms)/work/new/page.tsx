@@ -16,7 +16,9 @@ export default function NewProject() {
           </div>
           <Input label="Slug" name="slug" required placeholder="project-name" hint="URL: /work/project-name" />
           <Input label="Tagline" name="tagline" placeholder="Platform rebuild, 2024" />
-          <Input label="Outcome" name="outcome" placeholder="Load times down 80%" />
+          <Input label="Kind" name="kind" placeholder="Mobile app" hint="Category label shown on the homepage card" />
+          <Textarea label="Summary" name="summary" rows={2} placeholder="One-line teaser for the homepage work grid" />
+          <Input label="Outcome" name="outcome" placeholder="Load times down 80%" hint="Metric shown on the card, e.g. +118% paid conversion" />
           <Textarea label="Challenge" name="challenge" rows={4} placeholder="What problem did the project face..." />
           <Textarea label="Solution" name="solution" rows={4} placeholder="How we solved it..." />
           <ImageUpload label="Cover Image" name="cover_image_url" folder="work" />

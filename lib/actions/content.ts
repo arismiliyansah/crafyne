@@ -15,6 +15,8 @@ export async function upsertCaseStudy(formData: FormData) {
     name:            (formData.get('name') as string).trim(),
     year:            parseInt(formData.get('year') as string) || null,
     tagline:         (formData.get('tagline') as string) || null,
+    kind:            (formData.get('kind') as string) || null,
+    summary:         (formData.get('summary') as string) || null,
     outcome:         (formData.get('outcome') as string) || null,
     challenge:       (formData.get('challenge') as string) || null,
     solution:        (formData.get('solution') as string) || null,
@@ -137,6 +139,7 @@ export async function upsertTestimonial(formData: FormData) {
     author_name:    (formData.get('author_name') as string).trim(),
     author_role:    (formData.get('author_role') as string) || null,
     author_company: (formData.get('author_company') as string) || null,
+    rating:         parseInt(formData.get('rating') as string) || 5,
     featured:       formData.get('featured') === 'on',
     display_order:  parseInt(formData.get('display_order') as string) || 0,
   }
@@ -178,4 +181,133 @@ export async function saveSettings(formData: FormData) {
 
   revalidatePath('/')
   revalidatePath('/admin/settings')
+}
+
+// ── Services ─────────────────────────────────────────────────
+
+export async function upsertService(formData: FormData) {
+  const supabase = await createClient()
+  const id = formData.get('id') as string | null
+  const payload = {
+    title:         (formData.get('title') as string).trim(),
+    body:          (formData.get('body') as string).trim(),
+    bullets:       (formData.get('bullets') as string).split('\n').map(s => s.trim()).filter(Boolean),
+    tone:          (formData.get('tone') as string) || 'cream',
+    glyph:         (formData.get('glyph') as string) || null,
+    span:          (formData.get('span') as string) || 'trio',
+    display_order: parseInt(formData.get('display_order') as string) || 0,
+    active:        formData.get('active') === 'on',
+  }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  if (id) await (supabase.from('services') as any).update(payload).eq('id', id)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  else await (supabase.from('services') as any).insert(payload)
+  revalidatePath('/admin/services'); revalidatePath('/'); redirect('/admin/services')
+}
+
+export async function deleteService(id: string) {
+  const supabase = await createClient()
+  await supabase.from('services').delete().eq('id', id)
+  revalidatePath('/admin/services'); revalidatePath('/'); redirect('/admin/services')
+}
+
+// ── Stats ────────────────────────────────────────────────────
+
+export async function upsertStat(formData: FormData) {
+  const supabase = await createClient()
+  const id = formData.get('id') as string | null
+  const payload = {
+    value:         parseFloat(formData.get('value') as string) || 0,
+    suffix:        (formData.get('suffix') as string) || '',
+    decimals:      parseInt(formData.get('decimals') as string) || 0,
+    label:         (formData.get('label') as string).trim(),
+    display_order: parseInt(formData.get('display_order') as string) || 0,
+  }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  if (id) await (supabase.from('stats') as any).update(payload).eq('id', id)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  else await (supabase.from('stats') as any).insert(payload)
+  revalidatePath('/admin/stats'); revalidatePath('/'); redirect('/admin/stats')
+}
+
+export async function deleteStat(id: string) {
+  const supabase = await createClient()
+  await supabase.from('stats').delete().eq('id', id)
+  revalidatePath('/admin/stats'); revalidatePath('/'); redirect('/admin/stats')
+}
+
+// ── Pricing ──────────────────────────────────────────────────
+
+export async function upsertPricingTier(formData: FormData) {
+  const supabase = await createClient()
+  const id = formData.get('id') as string | null
+  const payload = {
+    name:          (formData.get('name') as string).trim(),
+    tag:           (formData.get('tag') as string) || null,
+    price:         (formData.get('price') as string).trim(),
+    unit:          (formData.get('unit') as string) || null,
+    blurb:         (formData.get('blurb') as string) || null,
+    features:      (formData.get('features') as string).split('\n').map(s => s.trim()).filter(Boolean),
+    tone:          (formData.get('tone') as string) || 'cream',
+    cta_label:     (formData.get('cta_label') as string) || 'Get started',
+    featured:      formData.get('featured') === 'on',
+    display_order: parseInt(formData.get('display_order') as string) || 0,
+  }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  if (id) await (supabase.from('pricing_tiers') as any).update(payload).eq('id', id)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  else await (supabase.from('pricing_tiers') as any).insert(payload)
+  revalidatePath('/admin/pricing'); revalidatePath('/'); redirect('/admin/pricing')
+}
+
+export async function deletePricingTier(id: string) {
+  const supabase = await createClient()
+  await supabase.from('pricing_tiers').delete().eq('id', id)
+  revalidatePath('/admin/pricing'); revalidatePath('/'); redirect('/admin/pricing')
+}
+
+// ── Tech groups ──────────────────────────────────────────────
+
+export async function upsertTechGroup(formData: FormData) {
+  const supabase = await createClient()
+  const id = formData.get('id') as string | null
+  const payload = {
+    label:         (formData.get('label') as string).trim(),
+    items:         (formData.get('items') as string).split(',').map(s => s.trim()).filter(Boolean),
+    display_order: parseInt(formData.get('display_order') as string) || 0,
+  }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  if (id) await (supabase.from('tech_groups') as any).update(payload).eq('id', id)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  else await (supabase.from('tech_groups') as any).insert(payload)
+  revalidatePath('/admin/tech-stack'); revalidatePath('/'); redirect('/admin/tech-stack')
+}
+
+export async function deleteTechGroup(id: string) {
+  const supabase = await createClient()
+  await supabase.from('tech_groups').delete().eq('id', id)
+  revalidatePath('/admin/tech-stack'); revalidatePath('/'); redirect('/admin/tech-stack')
+}
+
+// ── FAQs ─────────────────────────────────────────────────────
+
+export async function upsertFaq(formData: FormData) {
+  const supabase = await createClient()
+  const id = formData.get('id') as string | null
+  const payload = {
+    question:      (formData.get('question') as string).trim(),
+    answer:        (formData.get('answer') as string).trim(),
+    display_order: parseInt(formData.get('display_order') as string) || 0,
+  }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  if (id) await (supabase.from('faqs') as any).update(payload).eq('id', id)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  else await (supabase.from('faqs') as any).insert(payload)
+  revalidatePath('/admin/faq'); revalidatePath('/'); redirect('/admin/faq')
+}
+
+export async function deleteFaq(id: string) {
+  const supabase = await createClient()
+  await supabase.from('faqs').delete().eq('id', id)
+  revalidatePath('/admin/faq'); revalidatePath('/'); redirect('/admin/faq')
 }

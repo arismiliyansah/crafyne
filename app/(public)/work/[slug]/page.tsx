@@ -2,9 +2,10 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 import type { Metadata } from 'next'
-import { getCaseStudyBySlug, getCaseStudies } from '@/lib/supabase/queries'
-import Nav from '@/components/public/Nav'
-import BackToTop from '@/components/public/BackToTop'
+import { getCaseStudyBySlug, getCaseStudies, getSettings } from '@/lib/supabase/queries'
+import Nav from '@/components/public/landing/Nav'
+import Footer from '@/components/public/landing/Footer'
+import RevealController from '@/components/public/landing/RevealController'
 
 export const revalidate = 60
 
@@ -28,24 +29,16 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
   return {
     title: cs.name,
-    description: cs.outcome ?? '',
+    description: cs.outcome ?? cs.summary ?? '',
     alternates: { canonical: `/work/${slug}` },
-    openGraph: {
-      type: 'article',
-      title: cs.name,
-      description: cs.outcome ?? '',
-      images: ogImage,
-    },
-    twitter: {
-      card: 'summary_large_image',
-      images: ogImage.map(i => i.url),
-    },
+    openGraph: { type: 'article', title: cs.name, description: cs.outcome ?? '', images: ogImage },
+    twitter: { card: 'summary_large_image', images: ogImage.map(i => i.url) },
   }
 }
 
 export default async function CaseStudyPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
-  const [cs, all] = await Promise.all([getCaseStudyBySlug(slug), getCaseStudies(true)])
+  const [cs, all, settings] = await Promise.all([getCaseStudyBySlug(slug), getCaseStudies(true), getSettings()])
   if (!cs) notFound()
 
   const idx = all.findIndex(c => c.slug === slug)
@@ -62,7 +55,6 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
     keywords: cs.tags?.length ? cs.tags.join(', ') : undefined,
     url: `https://crafyne.com/work/${cs.slug}`,
   }
-
   const breadcrumbLd = {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
@@ -77,88 +69,51 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
-      <Nav />
-      <BackToTop />
-      <main className="pt-24 md:pt-28 pb-20 md:pb-32">
-        <div className="max-w-[860px] mx-auto px-5 sm:px-8">
-
-          {/* Back */}
-          <Link href="/work" className="text-[13px] text-ink-3 hover:text-ink transition mb-10 md:mb-12 inline-flex items-center gap-1.5">
-            ← Work
-          </Link>
-
-          {/* Header */}
-          <div className="mt-6 mb-12 md:mb-16">
-            <p className="text-[12px] font-medium tracking-[0.11em] uppercase text-accent mb-4">{cs.year}</p>
-            <h1 className="font-serif text-[clamp(36px,5vw,64px)] leading-[1.08] tracking-[-0.025em] mb-3">{cs.name}</h1>
-            {cs.tagline && (
-              <p className="text-[15px] md:text-[16px] text-ink-3 font-light mb-4">{cs.tagline}</p>
-            )}
-            {cs.outcome && (
-              <p className="text-[18px] text-ink-2 font-light leading-[1.6]">{cs.outcome}</p>
+      <Nav email={settings.agency_email ?? 'hello@crafyne.studio'} />
+      <RevealController />
+      <main>
+        <section className="pageHero pageHero--ink">
+          <div className="wrap">
+            <div className="pageHero__crumb reveal">
+              <Link href="/">Crafyne</Link><span>/</span><Link href="/work">Work</Link><span>/</span><span>{cs.name}</span>
+            </div>
+            <div className="pageHero__eyebrow reveal">/ {cs.kind ?? cs.tagline ?? 'case study'} · {cs.year}</div>
+            <h1 className="pageHero__title reveal" data-d="1">{cs.name}</h1>
+            {(cs.outcome || cs.summary) && (
+              <p className="pageHero__sub reveal" data-d="2">{cs.summary ?? cs.outcome}</p>
             )}
           </div>
+        </section>
 
-          {/* Cover */}
+        <div className="wrap" style={{ maxWidth: 820, paddingTop: 56, paddingBottom: 96 }}>
           {cs.cover_image_url && (
-            <div className="relative mb-12 md:mb-16 rounded-[4px] overflow-hidden aspect-[16/9] md:aspect-[16/8]">
-              <Image src={cs.cover_image_url} alt={cs.name} fill sizes="(max-width: 768px) 100vw, 860px" className="object-cover" />
+            <div className="reveal" style={{ position: 'relative', aspectRatio: '16 / 8', borderRadius: 8, overflow: 'hidden', marginBottom: 48 }}>
+              <Image src={cs.cover_image_url} alt={cs.name} fill sizes="(max-width: 900px) 100vw, 820px" className="object-cover" />
             </div>
           )}
 
-          {/* Tags */}
           {cs.tags?.length > 0 && (
-            <div className="flex flex-wrap gap-2 mb-10 md:mb-14">
-              {cs.tags.map(tag => (
-                <span key={tag} className="text-[12px] text-ink-3 bg-black/5 px-3 py-1 rounded-full">{tag}</span>
-              ))}
+            <div className="reveal" style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 40 }}>
+              {cs.tags.map(tag => (<span key={tag} className="chip">{tag}</span>))}
             </div>
           )}
 
-          {/* Content */}
-          <div className="space-y-10 md:space-y-14">
-            {cs.challenge && (
-              <section>
-                <h2 className="font-serif text-[20px] md:text-[22px] tracking-[-0.01em] mb-4 md:mb-5">The Challenge</h2>
-                <p className="text-[15px] md:text-[15.5px] text-ink-2 leading-[1.75] md:leading-[1.78] font-light whitespace-pre-wrap">{cs.challenge}</p>
-              </section>
-            )}
-            {cs.solution && (
-              <section>
-                <h2 className="font-serif text-[20px] md:text-[22px] tracking-[-0.01em] mb-4 md:mb-5">The Solution</h2>
-                <p className="text-[15px] md:text-[15.5px] text-ink-2 leading-[1.75] md:leading-[1.78] font-light whitespace-pre-wrap">{cs.solution}</p>
-              </section>
-            )}
+          <div className="prose-crafyne reveal">
+            {cs.challenge && (<><h2>The Challenge</h2><p style={{ whiteSpace: 'pre-wrap' }}>{cs.challenge}</p></>)}
+            {cs.solution && (<><h2>The Solution</h2><p style={{ whiteSpace: 'pre-wrap' }}>{cs.solution}</p></>)}
           </div>
 
-          {/* Gallery */}
           {cs.gallery_urls?.length > 0 && (
-            <section className="mt-14 md:mt-20">
-              <h2 className="font-serif text-[20px] md:text-[22px] tracking-[-0.01em] mb-6 md:mb-8">Project shots</h2>
-
-              {/* Hero shot — first image */}
-              <div className="relative mb-3 sm:mb-4 rounded-[4px] overflow-hidden aspect-[16/10] bg-black/[0.04]">
-                <Image
-                  src={cs.gallery_urls[0]}
-                  alt={`${cs.name} — project shot 1`}
-                  fill
-                  sizes="(max-width: 768px) 100vw, 860px"
-                  className="object-cover"
-                />
+            <section style={{ marginTop: 56 }}>
+              <h2 className="display" style={{ fontSize: 24, marginBottom: 20 }}>Project shots</h2>
+              <div style={{ position: 'relative', aspectRatio: '16 / 10', borderRadius: 6, overflow: 'hidden', marginBottom: 14, background: 'var(--paper)' }}>
+                <Image src={cs.gallery_urls[0]} alt={`${cs.name} — shot 1`} fill sizes="(max-width: 900px) 100vw, 820px" className="object-cover" />
               </div>
-
-              {/* Remaining shots — 2-col grid */}
               {cs.gallery_urls.length > 1 && (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 14 }}>
                   {cs.gallery_urls.slice(1).map((url, i) => (
-                    <div key={i} className="relative aspect-[4/3] rounded-[3px] overflow-hidden bg-black/[0.04]">
-                      <Image
-                        src={url}
-                        alt={`${cs.name} — project shot ${i + 2}`}
-                        fill
-                        sizes="(max-width: 640px) 100vw, 50vw"
-                        className="object-cover"
-                      />
+                    <div key={i} style={{ position: 'relative', aspectRatio: '4 / 3', borderRadius: 6, overflow: 'hidden', background: 'var(--paper)' }}>
+                      <Image src={url} alt={`${cs.name} — shot ${i + 2}`} fill sizes="(max-width: 640px) 100vw, 50vw" className="object-cover" />
                     </div>
                   ))}
                 </div>
@@ -166,58 +121,56 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
             </section>
           )}
 
-          {/* Live project link */}
           {cs.project_url && (
-            <div className="mt-12 md:mt-14 pt-8 md:pt-10 border-t border-black/8">
-              <a
-                href={cs.project_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-[14px] font-medium text-ink border-b border-ink/25 pb-px hover:border-ink/60 transition group"
-              >
+            <div style={{ marginTop: 48 }}>
+              <a href={cs.project_url} target="_blank" rel="noopener noreferrer" className="btn btn--ink">
                 View live project
-                <span className="inline-block transition-transform group-hover:translate-x-1">→</span>
+                <span className="btn__arrow" aria-hidden="true">
+                  <svg viewBox="0 0 12 12"><path d="M3 9 9 3M9 3H4M9 3v5" stroke="white" strokeWidth="1.6" fill="none" strokeLinecap="round" /></svg>
+                </span>
               </a>
             </div>
           )}
 
-          {/* Next project */}
           {nextCs && (
-            <section className="mt-14 md:mt-20 pt-8 md:pt-10 border-t border-black/8">
-              <p className="text-[11px] font-medium tracking-[0.13em] uppercase text-ink-3 mb-5">Next project</p>
-              <Link href={`/work/${nextCs.slug}`} className="group flex items-center justify-between gap-6">
-                <div className="min-w-0">
-                  <p className="font-serif text-[22px] md:text-[28px] tracking-[-0.01em] mb-1 group-hover:text-ink-2 transition truncate">
-                    {nextCs.name}
-                  </p>
-                  {nextCs.tagline && (
-                    <p className="text-[13px] md:text-[14px] text-ink-3 font-light truncate">{nextCs.tagline}</p>
-                  )}
-                </div>
-                <span className="flex-shrink-0 text-[13px] md:text-[14px] text-ink-3 group-hover:text-ink transition flex items-center gap-1.5">
-                  Read
-                  <span className="inline-block transition-transform group-hover:translate-x-1">→</span>
-                </span>
+            <section style={{ marginTop: 64, paddingTop: 40, borderTop: '1px solid var(--hair)' }}>
+              <div className="eyebrow" style={{ marginBottom: 16 }}>/ next project</div>
+              <Link href={`/work/${nextCs.slug}`} className="caseNext">
+                <span className="display" style={{ fontSize: 28 }}>{nextCs.name}</span>
+                <span className="mono">Read →</span>
               </Link>
             </section>
           )}
-
-          {/* Contact CTA */}
-          <section className="mt-16 md:mt-24 pt-10 md:pt-14 border-t border-black/8 text-center">
-            <h2 className="font-serif text-[clamp(24px,3.6vw,38px)] leading-[1.15] tracking-[-0.02em] mb-6 max-w-[480px] mx-auto">
-              Like what you see?<br /><em>Let&apos;s build yours.</em>
-            </h2>
-            <Link
-              href="/#contact"
-              className="inline-flex items-center gap-2 bg-ink text-bg px-7 py-3.5 rounded-full text-[14px] font-medium hover:opacity-80 transition group"
-            >
-              Start a project
-              <span className="inline-block transition-transform group-hover:translate-x-1">→</span>
-            </Link>
-          </section>
-
         </div>
+
+        <section className="cta section--tight" id="contact">
+          <div className="wrap">
+            <div className="cta__panel">
+              <div className="cta__bg" aria-hidden="true"><span className="cta__blob cta__blob--a" /><span className="cta__blob cta__blob--b" /></div>
+              <div className="cta__inner">
+                <div className="cta__copy">
+                  <span className="eyebrow cta__eye reveal">/ like what you see?</span>
+                  <h2 className="cta__title display reveal" data-d="1">Let&rsquo;s build <span className="italic">yours.</span></h2>
+                  <p className="cta__sub reveal" data-d="2">Tell us about the project. We reply within one working day.</p>
+                  <div className="cta__row reveal" data-d="3">
+                    <Link className="btn btn--orange" href="/#contact">
+                      Start a project
+                      <span className="btn__arrow" aria-hidden="true">
+                        <svg viewBox="0 0 12 12"><path d="M3 9 9 3M9 3H4M9 3v5" stroke="#0E1530" strokeWidth="1.6" fill="none" strokeLinecap="round" /></svg>
+                      </span>
+                    </Link>
+                    <a className="cta__mail mono" href={`mailto:${settings.agency_email ?? 'hello@crafyne.studio'}`}>{settings.agency_email ?? 'hello@crafyne.studio'}</a>
+                  </div>
+                </div>
+                <div className="cta__arrow reveal" data-d="2" aria-hidden="true">
+                  <svg viewBox="0 0 200 200"><path d="M30 170 L170 30 M170 30 H80 M170 30 V120" stroke="#FFD9CF" strokeWidth="14" fill="none" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
       </main>
+      <Footer settings={settings} />
     </>
   )
 }
