@@ -1518,3 +1518,13 @@ img { max-width: 100%; display: block; }
 .caseNext { display: flex; align-items: center; justify-content: space-between; gap: 24px; text-decoration: none; color: var(--ink); transition: opacity .2s ease; }
 .caseNext:hover { opacity: .6; }
 .workCard__visual, .article__visual, .jrnFeat__visual { position: relative; }
+
+/* ---- Brand lockup logos (replace inline mark) ---- */
+.nav__logo { height: 26px; width: auto; display: block; }
+.nav__logo--dark { display: none; }
+.nav--scrolled .nav__logo--light { display: none; }
+.nav--scrolled .nav__logo--dark { display: block; }
+.nav--menu-open .nav__logo--light { display: block; }
+.nav--menu-open .nav__logo--dark { display: none; }
+.foot__logo { height: 30px; width: auto; display: block; }
+@media (max-width: 640px) { .nav__logo { height: 22px; } }
