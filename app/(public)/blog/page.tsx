@@ -31,7 +31,7 @@ export default async function BlogPage() {
 
   return (
     <>
-      <Nav email={settings.agency_email ?? 'hello@crafyne.studio'} />
+      <Nav email={settings.agency_email ?? 'contact@crafyne.com'} />
       <RevealController />
       <main>
         <section className="pageHero pageHero--ink">

@@ -48,7 +48,7 @@ export default async function WorkPage() {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      <Nav email={settings.agency_email ?? 'hello@crafyne.studio'} />
+      <Nav email={settings.agency_email ?? 'contact@crafyne.com'} />
       <RevealController />
       <main>
         <section className="pageHero pageHero--crimson">

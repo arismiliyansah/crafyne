@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 export default async function PrivacyPage() {
   const settings = await getSettings()
-  const email = settings.agency_email ?? 'hello@crafyne.studio'
+  const email = settings.agency_email ?? 'contact@crafyne.com'
 
   return (
     <>

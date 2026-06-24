@@ -3,7 +3,7 @@ import InquiryForm from '@/components/public/InquiryForm'
 
 // CTA banner (navy panel) followed by the real inquiry form.
 export default function CTA({ settings }: { settings: SiteSettings }) {
-  const email = settings.agency_email ?? 'hello@crafyne.studio'
+  const email = settings.agency_email ?? 'contact@crafyne.com'
   return (
     <section className="cta section--tight" id="contact">
       <div className="wrap">

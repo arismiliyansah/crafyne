@@ -21,7 +21,7 @@ export const metadata: Metadata = {
 
 export default async function ContactPage() {
   const settings = await getSettings()
-  const email = settings.agency_email ?? 'hello@crafyne.studio'
+  const email = settings.agency_email ?? 'contact@crafyne.com'
 
   return (
     <>

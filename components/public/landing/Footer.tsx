@@ -2,7 +2,7 @@ import Link from 'next/link'
 import type { SiteSettings } from '@/lib/supabase/types'
 
 export default function Footer({ settings }: { settings: SiteSettings }) {
-  const email = settings.agency_email ?? 'hello@crafyne.studio'
+  const email = settings.agency_email ?? 'contact@crafyne.com'
   return (
     <footer className="foot">
       <div className="wrap">

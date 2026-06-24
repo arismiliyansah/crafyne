@@ -33,7 +33,7 @@ const principles = [
 
 export default async function AboutPage() {
   const [team, settings] = await Promise.all([getTeam(), getSettings()])
-  const email = settings.agency_email ?? 'hello@crafyne.studio'
+  const email = settings.agency_email ?? 'contact@crafyne.com'
   const location = settings.agency_location ?? 'Jakarta, Indonesia'
 
   return (
