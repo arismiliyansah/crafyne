@@ -16,7 +16,7 @@ export default function FAQ({ faqs }: { faqs: Faq[] }) {
           </h2>
           <p className="faq__sub reveal" data-d="2">
             Don&rsquo;t see your question? Email{' '}
-            <a className="mono" href="mailto:hello@crafyne.studio">hello@crafyne.studio</a> and you&rsquo;ll
+            <a className="mono" href="mailto:contact@crafyne.com">contact@crafyne.com</a> and you&rsquo;ll
             get a real answer from a real person.
           </p>
         </div>

@@ -48,8 +48,8 @@ const openings = [
 
 export default async function CareersPage() {
   const settings = await getSettings()
-  const email = settings.agency_email ?? 'hello@crafyne.studio'
-  const careersEmail = `careers@${email.split('@')[1] ?? 'crafyne.studio'}`
+  const email = settings.agency_email ?? 'contact@crafyne.com'
+  const careersEmail = email
   const apply = (role: string) => `mailto:${careersEmail}?subject=${encodeURIComponent(`Application: ${role}`)}`
 
   return (

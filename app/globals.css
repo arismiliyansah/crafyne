@@ -37,16 +37,10 @@ body {
   overflow-x: hidden;
 }
 
-/* Scroll reveal */
-.reveal {
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.75s ease, transform 0.75s ease;
-}
-.reveal.is-visible { opacity: 1; transform: none; }
-.reveal.d1 { transition-delay: 0.10s; }
-.reveal.d2 { transition-delay: 0.20s; }
-.reveal.d3 { transition-delay: 0.32s; }
+/* Scroll reveal is handled by the design system below (.js-reveal.reveal + RevealController).
+   The old always-on `.reveal { opacity:0 }` was removed: it hid any element whose imperative
+   .js-reveal/.in classes get wiped when React re-renders (FAQ expand, case-study/work filters),
+   which made those items disappear. Plain .reveal is visible by default (no-JS friendly). */
 
 /* ── Rich text editor (Tiptap) ──────────────────── */
 .prose-editor h1 { font-family: var(--font-serif); font-size: 1.75rem; line-height: 1.2; font-weight: 400; margin: 1.25rem 0 0.5rem; tracking: -0.02em; }
@@ -1518,3 +1512,13 @@ img { max-width: 100%; display: block; }
 .caseNext { display: flex; align-items: center; justify-content: space-between; gap: 24px; text-decoration: none; color: var(--ink); transition: opacity .2s ease; }
 .caseNext:hover { opacity: .6; }
 .workCard__visual, .article__visual, .jrnFeat__visual { position: relative; }
+
+/* ---- Brand lockup logos (replace inline mark) ---- */
+.nav__logo { height: 26px; width: auto; display: block; }
+.nav__logo--dark { display: none; }
+.nav--scrolled .nav__logo--light { display: none; }
+.nav--scrolled .nav__logo--dark { display: block; }
+.nav--menu-open .nav__logo--light { display: block; }
+.nav--menu-open .nav__logo--dark { display: none; }
+.foot__logo { height: 30px; width: auto; display: block; }
+@media (max-width: 640px) { .nav__logo { height: 22px; } }

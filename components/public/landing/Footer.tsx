@@ -2,17 +2,15 @@ import Link from 'next/link'
 import type { SiteSettings } from '@/lib/supabase/types'
 
 export default function Footer({ settings }: { settings: SiteSettings }) {
-  const email = settings.agency_email ?? 'hello@crafyne.studio'
+  const email = settings.agency_email ?? 'contact@crafyne.com'
   return (
     <footer className="foot">
       <div className="wrap">
         <div className="foot__top">
           <div className="foot__brand">
             <div className="foot__brandLine">
-              <span className="foot__mark" aria-hidden="true">
-                <svg viewBox="0 0 24 24"><path d="M4 4h7a6 6 0 0 1 0 12H8l8 4H4z" fill="currentColor" /></svg>
-              </span>
-              <span className="foot__brandName display" data-brand-name>Crafyne</span>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/brand/crafyne-nav-light.svg" alt="Crafyne" className="foot__logo" />
             </div>
             <p className="foot__line">
               {settings.agency_tagline ?? 'An independent software studio. We build software for people who care how it feels.'}

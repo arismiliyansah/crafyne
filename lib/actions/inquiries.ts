@@ -37,7 +37,7 @@ export async function submitInquiry(formData: FormData): Promise<{ error?: strin
     const resend = new Resend(process.env.RESEND_API_KEY)
     await resend.emails.send({
       from: 'Crafyne CMS <onboarding@resend.dev>',
-      to: process.env.ADMIN_EMAIL ?? 'hello@crafyne.com',
+      to: process.env.ADMIN_EMAIL ?? 'contact@crafyne.com',
       subject: `New inquiry from ${name}`,
       html: `
         <div style="font-family:sans-serif;max-width:600px;margin:0 auto;color:#1a1a18">

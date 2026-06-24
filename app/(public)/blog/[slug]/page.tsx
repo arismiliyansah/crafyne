@@ -73,7 +73,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
-      <Nav email={settings.agency_email ?? 'hello@crafyne.studio'} />
+      <Nav email={settings.agency_email ?? 'contact@crafyne.com'} />
       <RevealController />
       <main>
         <section className="pageHero pageHero--ink">

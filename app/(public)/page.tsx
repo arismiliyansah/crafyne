@@ -52,7 +52,7 @@ export default async function HomePage() {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      <Nav email={settings.agency_email ?? 'hello@crafyne.studio'} />
+      <Nav email={settings.agency_email ?? 'contact@crafyne.com'} />
       <RevealController />
       <Hero settings={settings} />
       <Stats stats={stats} eyebrow={settings.stats_eyebrow ?? 'by the numbers'} title={settings.stats_title ?? 'Eight years of shipped products, measured in trust not tickets.'} />

@@ -69,7 +69,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
-      <Nav email={settings.agency_email ?? 'hello@crafyne.studio'} />
+      <Nav email={settings.agency_email ?? 'contact@crafyne.com'} />
       <RevealController />
       <main>
         <section className="pageHero pageHero--ink">
@@ -159,7 +159,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
                         <svg viewBox="0 0 12 12"><path d="M3 9 9 3M9 3H4M9 3v5" stroke="#0E1530" strokeWidth="1.6" fill="none" strokeLinecap="round" /></svg>
                       </span>
                     </Link>
-                    <a className="cta__mail mono" href={`mailto:${settings.agency_email ?? 'hello@crafyne.studio'}`}>{settings.agency_email ?? 'hello@crafyne.studio'}</a>
+                    <a className="cta__mail mono" href={`mailto:${settings.agency_email ?? 'contact@crafyne.com'}`}>{settings.agency_email ?? 'contact@crafyne.com'}</a>
                   </div>
                 </div>
                 <div className="cta__arrow reveal" data-d="2" aria-hidden="true">
