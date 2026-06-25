@@ -1513,12 +1513,13 @@ img { max-width: 100%; display: block; }
 .caseNext:hover { opacity: .6; }
 .workCard__visual, .article__visual, .jrnFeat__visual { position: relative; }
 
-/* ---- Brand lockup logos (replace inline mark) ---- */
+/* ---- Brand lockup logos ---- */
+/* on-dark = white artwork (crafyne-nav-dark.svg) for dark bg; on-light = black (crafyne-nav-light.svg) for light bg */
 .nav__logo { height: 26px; width: auto; display: block; }
-.nav__logo--dark { display: none; }
-.nav--scrolled .nav__logo--light { display: none; }
-.nav--scrolled .nav__logo--dark { display: block; }
-.nav--menu-open .nav__logo--light { display: block; }
-.nav--menu-open .nav__logo--dark { display: none; }
+.nav__logo--on-light { display: none; }                  /* black logo: shown only when scrolled (cream bg) */
+.nav--scrolled .nav__logo--on-dark { display: none; }    /* hide white logo once scrolled */
+.nav--scrolled .nav__logo--on-light { display: block; }
+.nav--menu-open .nav__logo--on-dark { display: block; }  /* white logo over the dark mobile menu */
+.nav--menu-open .nav__logo--on-light { display: none; }
 .foot__logo { height: 30px; width: auto; display: block; }
 @media (max-width: 640px) { .nav__logo { height: 22px; } }

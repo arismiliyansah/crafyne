@@ -9,8 +9,9 @@ export default function Footer({ settings }: { settings: SiteSettings }) {
         <div className="foot__top">
           <div className="foot__brand">
             <div className="foot__brandLine">
+              {/* white artwork for the dark footer */}
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/brand/crafyne-nav-light.svg" alt="Crafyne" className="foot__logo" />
+              <img src="/brand/crafyne-nav-dark.svg" alt="Crafyne" className="foot__logo" />
             </div>
             <p className="foot__line">
               {settings.agency_tagline ?? 'An independent software studio. We build software for people who care how it feels.'}
