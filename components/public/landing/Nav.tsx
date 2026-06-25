@@ -54,10 +54,11 @@ export default function Nav({ email }: { email: string }) {
     <nav className={'nav ' + (scrolled ? 'nav--scrolled ' : '') + (menuOpen ? 'nav--menu-open' : '')}>
       <div className="nav__inner wrap" style={{ height: '44px' }}>
         <Link href="/" className="nav__brand" onClick={() => setMenuOpen(false)} aria-label="Crafyne — home">
+          {/* nav-dark.svg = cream/white artwork (over the dark hero); nav-light.svg = black (once scrolled) */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/brand/crafyne-nav-light.svg" alt="Crafyne" className="nav__logo nav__logo--light" />
+          <img src="/brand/crafyne-nav-dark.svg" alt="Crafyne" className="nav__logo nav__logo--on-dark" />
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/brand/crafyne-nav-dark.svg" alt="Crafyne" className="nav__logo nav__logo--dark" />
+          <img src="/brand/crafyne-nav-light.svg" alt="Crafyne" className="nav__logo nav__logo--on-light" />
         </Link>
 
         <div className="nav__links" style={{ fontSize: '16px', fontWeight: 700 }}>
