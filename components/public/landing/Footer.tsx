@@ -50,7 +50,8 @@ export default function Footer({ settings }: { settings: SiteSettings }) {
             </div>
           </div>
         </div>
-        <div className="foot__wordmark display" aria-hidden="true">CRAFYNE</div>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/brand/crafyne-lockup-horizontal-dark.svg" alt="Crafyne" className="foot__lockup" />
         <div className="foot__bot">
           <div className="mono">© {new Date().getFullYear()} {settings.footer_copyright ?? 'Crafyne Studio · Booking Q3 slots'}</div>
           <div className="foot__legal mono">
