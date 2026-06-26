@@ -6,6 +6,9 @@ import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
 
 export async function submitInquiry(formData: FormData): Promise<{ error?: string }> {
+  // Honeypot: bots fill the hidden "website" field. Pretend success, drop silently.
+  if (((formData.get('website') as string) ?? '').trim()) return {}
+
   const name         = (formData.get('name') as string ?? '').trim()
   const email        = (formData.get('email') as string ?? '').trim()
   const company      = (formData.get('company') as string ?? '').trim()
