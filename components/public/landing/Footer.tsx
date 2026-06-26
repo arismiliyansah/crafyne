@@ -58,8 +58,9 @@ export default function Footer({ settings }: { settings: SiteSettings }) {
             </div>
           </div>
         </div>
+        {/* transparent lockup (no background card) — blends into the footer */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/brand/crafyne-lockup-horizontal-dark.svg" alt="Crafyne" className="foot__lockup" />
+        <img src="/brand/crafyne-lockup-horizontal.svg" alt="Crafyne" className="foot__lockup" />
         <div className="foot__bot">
           <div className="mono">© {new Date().getFullYear()} {settings.footer_copyright ?? 'Crafyne Studio · Booking Q3 slots'}</div>
           <div className="foot__legal mono">
