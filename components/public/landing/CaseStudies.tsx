@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import type { CaseStudy } from '@/lib/supabase/types'
 import { toneByIndex, shapeByIndex, type CaseShape } from './tones'
 
@@ -89,8 +90,10 @@ export default function CaseStudies({ cases }: { cases: CaseStudy[] }) {
           {visible.map((c, i) => (
             <article className={`case case--${toneByIndex(i)} reveal`} data-d={(i % 3) + 1} key={c.id}>
               <div className="case__visual">
-                <CaseShapeView kind={shapeByIndex(i)} />
-                <span className="case__metric mono">{c.outcome}</span>
+                {c.cover_image_url
+                  ? <Image src={c.cover_image_url} alt={c.name} fill sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw" className="object-cover" />
+                  : <CaseShapeView kind={shapeByIndex(i)} />}
+                {c.outcome && <span className="case__metric mono">{c.outcome}</span>}
               </div>
               <div className="case__body">
                 <div className="case__meta mono">
