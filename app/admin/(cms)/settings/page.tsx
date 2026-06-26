@@ -59,6 +59,15 @@ export default async function SettingsPage() {
           </section>
 
           <section>
+            <h2 className="text-xs font-medium text-[#888] uppercase tracking-widest mb-5">Team Section</h2>
+            <div className="space-y-4">
+              <Input label="Eyebrow" name="team_eyebrow" defaultValue={s.team_eyebrow} placeholder="the studio" />
+              <Textarea label="Title" name="team_title" rows={2} defaultValue={s.team_title} hint="Leave empty for the auto default (uses the live team count, e.g. “Six people…”)" />
+              <Textarea label="Sub-text" name="team_sub" rows={2} defaultValue={s.team_sub} placeholder="We keep the studio small on purpose…" />
+            </div>
+          </section>
+
+          <section>
             <h2 className="text-xs font-medium text-[#888] uppercase tracking-widest mb-5">Footer — Social Media</h2>
             <div className="space-y-4">
               <Input label="Instagram URL" name="footer_instagram_url" defaultValue={s.footer_instagram_url} placeholder="https://instagram.com/crafyne" />
