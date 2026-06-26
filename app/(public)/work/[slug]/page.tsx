@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
   const ogImage = cs.cover_image_url
     ? [{ url: cs.cover_image_url, width: 1200, height: 630, alt: cs.name }]
-    : [{ url: '/og-image.png', width: 1200, height: 630, alt: cs.name }]
+    : [{ url: '/og-image.png?v=2', width: 1200, height: 630, alt: cs.name }]
 
   return {
     title: cs.name,

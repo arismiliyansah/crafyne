@@ -29,11 +29,11 @@ export const metadata: Metadata = {
     siteName: 'Crafyne',
     locale: 'en_US',
     url: 'https://crafyne.com',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Crafyne — Software Studio' }],
+    images: [{ url: '/og-image.png?v=2', width: 1200, height: 630, alt: 'Crafyne — Software Studio' }],
   },
   twitter: {
     card: 'summary_large_image',
-    images: ['/og-image.png'],
+    images: ['/og-image.png?v=2'],
   },
   alternates: {
     types: {

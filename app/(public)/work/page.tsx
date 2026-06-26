@@ -17,9 +17,9 @@ export const metadata: Metadata = {
     title: 'Work — Crafyne',
     description: 'Selected case studies from Crafyne — software products built for teams that care about craft.',
     url: '/work',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Selected work — Crafyne' }],
+    images: [{ url: '/og-image.png?v=2', width: 1200, height: 630, alt: 'Selected work — Crafyne' }],
   },
-  twitter: { card: 'summary_large_image', images: ['/og-image.png'] },
+  twitter: { card: 'summary_large_image', images: ['/og-image.png?v=2'] },
 }
 
 export default async function WorkPage() {

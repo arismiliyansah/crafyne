@@ -44,7 +44,7 @@ export default async function HomePage() {
     '@type': 'Organization',
     name: 'Crafyne',
     url: 'https://crafyne.com',
-    logo: 'https://crafyne.com/og-image.png',
+    logo: 'https://crafyne.com/og-image.png?v=2',
     description: settings.agency_tagline ?? 'A small, senior team of engineers and designers building software for people who care how it feels.',
     email: settings.agency_email ?? undefined,
   }

@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     title: 'Careers — Crafyne',
     description: 'Work with people who finish things. Two senior openings at Crafyne.',
     url: '/careers',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Careers at Crafyne' }],
+    images: [{ url: '/og-image.png?v=2', width: 1200, height: 630, alt: 'Careers at Crafyne' }],
   },
 }
 

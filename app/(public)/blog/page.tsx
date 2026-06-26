@@ -19,9 +19,9 @@ export const metadata: Metadata = {
     title: 'Journal — Crafyne',
     description: 'Notes on software, design, and craft from the Crafyne team.',
     url: '/blog',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Crafyne Journal' }],
+    images: [{ url: '/og-image.png?v=2', width: 1200, height: 630, alt: 'Crafyne Journal' }],
   },
-  twitter: { card: 'summary_large_image', images: ['/og-image.png'] },
+  twitter: { card: 'summary_large_image', images: ['/og-image.png?v=2'] },
 }
 
 const PAGE_SIZE = 6
