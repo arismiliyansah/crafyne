@@ -15,7 +15,7 @@ export const metadata: Metadata = {
     title: 'Contact — Crafyne',
     description: 'Start a project with Crafyne. A real human replies within one working day.',
     url: '/contact',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Contact Crafyne' }],
+    images: [{ url: '/og-image.png?v=2', width: 1200, height: 630, alt: 'Contact Crafyne' }],
   },
 }
 

@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     title: 'About — Crafyne',
     description: 'An independent software studio in Jakarta, kept small on purpose since 2018.',
     url: '/about',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'About Crafyne' }],
+    images: [{ url: '/og-image.png?v=2', width: 1200, height: 630, alt: 'About Crafyne' }],
   },
 }
 
