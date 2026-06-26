@@ -1016,6 +1016,7 @@ img { max-width: 100%; display: block; }
 .tier__name { font-size: 32px; font-weight: 700; letter-spacing: -0.02em; line-height: 1; }
 .tier__tag { font-size: 12px; opacity: 0.75; margin-top: 6px; }
 .tier__price { display: flex; align-items: baseline; gap: 4px; }
+.tier__from { font-size: 13px; opacity: 0.6; }
 .tier__currency { font-size: 16px; opacity: 0.7; }
 .tier__amt { font-size: clamp(24px, 2.4vw, 32px); font-weight: 700; letter-spacing: -0.02em; }
 .tier__unit { font-size: 12px; opacity: 0.7; margin-left: 4px; }
