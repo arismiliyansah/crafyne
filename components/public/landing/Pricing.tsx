@@ -29,8 +29,9 @@ export default function Pricing({ tiers }: { tiers: PricingTier[] }) {
                   <div className="tier__tag mono">{t.tag}</div>
                 </div>
                 <div className="tier__price">
+                  {/^from\s+/i.test(t.price) && <span className="tier__from mono">from</span>}
                   <span className="tier__currency">$</span>
-                  <span className="tier__amt display">{t.price}</span>
+                  <span className="tier__amt display">{t.price.replace(/^from\s+/i, '')}</span>
                   <span className="tier__unit mono">{t.unit}</span>
                 </div>
               </div>
