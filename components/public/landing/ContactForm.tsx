@@ -12,7 +12,7 @@ const heading = { fontFamily: 'var(--font-display)', fontSize: 24, fontWeight: 7
 const crimsonEyebrow = { color: 'var(--crimson)', marginBottom: 8 } as const
 
 export default function ContactForm() {
-  const [form, setForm] = useState({ name: '', email: '', company: '', role: '', services: [] as string[], budget: '', timeline: '', project: '', how: '' })
+  const [form, setForm] = useState({ name: '', email: '', company: '', role: '', services: [] as string[], budget: '', timeline: '', project: '', how: '', website: '' })
   const [submitted, setSubmitted] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [isPending, startTransition] = useTransition()
@@ -33,6 +33,7 @@ export default function ContactForm() {
     const message = [form.project, form.role && `Role: ${form.role}`, form.how && `Found us via: ${form.how}`]
       .filter(Boolean).join('\n\n')
     fd.set('message', message)
+    fd.set('website', form.website)
     startTransition(async () => {
       const res = await submitInquiry(fd)
       if (res.error) setError(res.error)
@@ -60,6 +61,7 @@ export default function ContactForm() {
 
   return (
     <form className="contactForm reveal" onSubmit={onSubmit}>
+      <input type="text" name="website" value={form.website} onChange={e => setForm({ ...form, website: e.target.value })} tabIndex={-1} autoComplete="off" aria-hidden="true" style={{ position: 'absolute', left: '-9999px', width: 1, height: 1, opacity: 0 }} />
       <div style={{ marginBottom: 24 }}>
         <div className="eyebrow" style={crimsonEyebrow}>/ section 01</div>
         <h2 style={heading}>Who&rsquo;s asking?</h2>

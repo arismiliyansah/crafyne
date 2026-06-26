@@ -3,6 +3,13 @@ import type { SiteSettings } from '@/lib/supabase/types'
 
 export default function Footer({ settings }: { settings: SiteSettings }) {
   const email = settings.agency_email ?? 'contact@crafyne.com'
+  const socials = [
+    { label: 'LinkedIn', short: 'Li', url: settings.footer_linkedin_url },
+    { label: 'X', short: 'X', url: settings.footer_x_url },
+    { label: 'GitHub', short: 'Gh', url: settings.footer_github_url },
+    { label: 'Dribbble', short: 'Dr', url: settings.footer_dribbble_url },
+    { label: 'Instagram', short: 'Ig', url: settings.footer_instagram_url },
+  ].filter((s): s is { label: string; short: string; url: string } => !!s.url && s.url !== '#')
   return (
     <footer className="foot">
       <div className="wrap">
@@ -41,12 +48,13 @@ export default function Footer({ settings }: { settings: SiteSettings }) {
               <div className="foot__h mono">Get in touch</div>
               <a className="mono" href={`mailto:${email}`}>{email}</a>
               <Link className="mono" href="/contact">Start a project</Link>
-              <div className="foot__social">
-                <a href="#" aria-label="LinkedIn">Li</a>
-                <a href="#" aria-label="X">X</a>
-                <a href="#" aria-label="Github">Gh</a>
-                <a href="#" aria-label="Dribbble">Dr</a>
-              </div>
+              {socials.length > 0 && (
+                <div className="foot__social">
+                  {socials.map(s => (
+                    <a key={s.label} href={s.url} target="_blank" rel="noopener noreferrer" aria-label={s.label}>{s.short}</a>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </div>

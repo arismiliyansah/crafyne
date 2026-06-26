@@ -171,6 +171,7 @@ export default function InquiryForm() {
 
   return (
     <form onSubmit={handleSubmit} className="max-w-[600px] mx-auto w-full text-left">
+      <input type="text" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" style={{ position: 'absolute', left: '-9999px', width: 1, height: 1, opacity: 0 }} />
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
 
         <div>
