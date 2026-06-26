@@ -1,21 +1,28 @@
 import Image from 'next/image'
-import type { TeamMember } from '@/lib/supabase/types'
+import type { TeamMember, SiteSettings } from '@/lib/supabase/types'
 import { toneByIndex } from './tones'
 
-export default function Team({ team }: { team: TeamMember[] }) {
+const NUM_WORDS = ['Zero', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve']
+
+export default function Team({ team, settings }: { team: TeamMember[]; settings: SiteSettings }) {
   if (team.length === 0) return null
+  const countWord = NUM_WORDS[team.length] ?? String(team.length)
+
   return (
     <section className="team section" id="team">
       <div className="wrap">
         <div className="team__head">
-          <span className="eyebrow reveal">/ the studio</span>
+          <span className="eyebrow reveal">/ {settings.team_eyebrow || 'the studio'}</span>
           <h2 className="team__title h2 display reveal" data-d="1">
-            Six people. <span className="italic">No middlemen.</span><br />
-            You talk to the person doing the work.
+            {settings.team_title || (
+              <>
+                {countWord} people. <span className="italic">No middlemen.</span><br />
+                You talk to the person doing the work.
+              </>
+            )}
           </h2>
           <p className="team__sub reveal" data-d="2">
-            We keep the studio small on purpose. Every project is run by a senior pair
-            and supported by the whole team in weekly critique.
+            {settings.team_sub || 'We keep the studio small on purpose. Every project is run by a senior pair and supported by the whole team in weekly critique.'}
           </p>
         </div>
         <div className="team__grid">

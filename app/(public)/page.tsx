@@ -60,7 +60,7 @@ export default async function HomePage() {
       <Services services={services} />
       <Process />
       <CaseStudies cases={cases} />
-      <Team team={team} />
+      <Team team={team} settings={settings} />
       <Testimonials testimonials={testimonials} />
       <Pricing tiers={tiers} />
       <TechStack groups={groups} />
