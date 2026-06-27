@@ -99,7 +99,6 @@ export default function CaseStudies({ cases }: { cases: CaseStudy[] }) {
                   <span>{c.kind ?? c.tagline}</span><span>·</span><span>{c.year}</span>
                 </div>
                 <h3 className="case__name display">{c.name}</h3>
-                <p className="case__teaser">{c.summary ?? c.tagline}</p>
                 <div className="case__foot">
                   <Link className="case__link" href={`/work/${c.slug}`}>
                     Read case study
