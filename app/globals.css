@@ -133,6 +133,9 @@ img { max-width: 100%; display: block; }
 }
 .btn--ink { background: var(--ink); color: var(--cream); }
 .btn--ink:hover { transform: translateY(-2px); background: var(--crimson); }
+.btn--ghost { background: transparent; color: var(--ink); border: 1px solid var(--hair); }
+.btn--ghost:hover { background: rgba(15,10,7,0.04); }
+.btn:disabled { opacity: 0.4; pointer-events: none; }
 .btn--cream { background: var(--cream); color: var(--ink); }
 .btn--cream:hover { transform: translateY(-2px); background: white; }
 .btn--ghost { background: transparent; color: inherit; border-color: currentColor; }
@@ -1538,3 +1541,62 @@ img { max-width: 100%; display: block; }
 .nav--menu-open .nav__logo--on-light { display: none; }
 .foot__logo { height: 30px; width: auto; display: block; }
 @media (max-width: 640px) { .nav__logo { height: 22px; } }
+
+/* ===== PROJECT FLOW (wizard) ===== */
+.pf { background: var(--cream); color: var(--ink); border: 1px solid var(--hair); border-radius: 24px; padding: clamp(22px, 4vw, 40px); }
+.pf__progress { margin-bottom: 28px; }
+.pf__track { height: 4px; border-radius: 999px; background: rgba(15,10,7,0.10); overflow: hidden; }
+.pf__fill { height: 100%; background: var(--crimson); border-radius: 999px; }
+.pf__steps { list-style: none; display: flex; justify-content: space-between; gap: 8px; padding: 14px 0 0; margin: 0; }
+.pf__step { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--mute); }
+.pf__dot { width: 24px; height: 24px; border-radius: 999px; display: grid; place-items: center; background: rgba(15,10,7,0.08); color: var(--mute); font-size: 12px; font-weight: 600; flex-shrink: 0; }
+.pf__step.is-active .pf__dot { background: var(--crimson); color: var(--cream); }
+.pf__step.is-done .pf__dot { background: var(--ink); color: var(--cream); }
+.pf__step.is-active { color: var(--ink); font-weight: 600; }
+.pf__stepLabel { white-space: nowrap; }
+.pf__stage { position: relative; overflow: hidden; }
+.pf__body { display: flex; flex-direction: column; gap: 18px; }
+.pf__head { margin-bottom: 4px; }
+.pf__eye { color: var(--crimson); display: block; margin-bottom: 6px; }
+.pf__title { font-family: var(--font-display); font-size: clamp(22px, 3vw, 30px); font-weight: 700; letter-spacing: -0.02em; margin: 0; }
+.pf__pkgs { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+.pf__pkg { text-align: left; position: relative; display: flex; flex-direction: column; gap: 4px; padding: 18px; border-radius: 16px; border: 1px solid var(--hair); background: var(--paper); cursor: pointer; }
+.pf__pkg.is-on { border-color: var(--crimson); box-shadow: 0 0 0 2px var(--crimson) inset; }
+.pf__pkgName { font-family: var(--font-display); font-size: 18px; font-weight: 700; }
+.pf__pkgTag { font-size: 12px; color: var(--mute); }
+.pf__pkgPrice { font-size: 13px; margin-top: 6px; }
+.pf__pkgPrice i { font-style: normal; opacity: 0.6; margin-left: 2px; }
+.pf__pkgFrom { font-style: normal; opacity: 0.6; }
+.pf__pkgCheck { position: absolute; top: 12px; right: 12px; width: 22px; height: 22px; border-radius: 999px; background: var(--crimson); color: var(--cream); display: grid; place-items: center; font-size: 13px; }
+.pf__care { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-radius: 14px; border: 1px dashed var(--hair); background: transparent; cursor: pointer; text-align: left; font-size: 14px; }
+.pf__care.is-on { border-style: solid; border-color: var(--crimson); }
+.pf__careBox { width: 22px; height: 22px; border-radius: 6px; border: 1px solid var(--hair); display: grid; place-items: center; flex-shrink: 0; color: var(--crimson); font-size: 13px; }
+.pf__care.is-on .pf__careBox { background: var(--crimson); color: var(--cream); border-color: var(--crimson); }
+.pf__row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.pf__refs { border-top: 1px solid var(--hair); padding-top: 18px; display: flex; flex-direction: column; gap: 12px; }
+.pf__notice { display: flex; gap: 10px; align-items: flex-start; background: var(--peach); color: var(--ink); border-radius: 12px; padding: 12px 14px; font-size: 14px; line-height: 1.5; }
+.pf__notice p { margin: 0; }
+.pf__noticeIcon { color: var(--crimson); font-size: 16px; line-height: 1.4; }
+.pf__noticeOpt { opacity: 0.6; }
+.pf__refRow { display: flex; gap: 8px; align-items: center; overflow: hidden; }
+.pf__refRow input { flex: 1; }
+.pf__refDel { width: 36px; height: 36px; flex-shrink: 0; border-radius: 10px; border: 1px solid var(--hair); background: transparent; cursor: pointer; font-size: 18px; line-height: 1; color: var(--mute); }
+.pf__refAdd { align-self: flex-start; background: transparent; border: none; color: var(--crimson); font-weight: 600; font-size: 14px; cursor: pointer; padding: 0; }
+.pf__review { display: flex; flex-direction: column; gap: 0; margin: 0; border: 1px solid var(--hair); border-radius: 14px; overflow: hidden; }
+.pf__reviewRow { display: grid; grid-template-columns: 110px 1fr auto; gap: 12px; align-items: baseline; padding: 14px 16px; border-bottom: 1px solid var(--hair); }
+.pf__reviewRow:last-child { border-bottom: none; }
+.pf__reviewRow dt { font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--mute); margin: 0; }
+.pf__reviewRow dd { margin: 0; font-size: 14px; line-height: 1.5; }
+.pf__edit { background: transparent; border: none; color: var(--crimson); font-size: 13px; font-weight: 600; cursor: pointer; padding: 0; }
+.pf__reviewNote { font-size: 13px; color: var(--mute); margin: 0; }
+.pf__error { color: var(--crimson); font-size: 14px; margin: 12px 0 0; }
+.pf__nav { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 24px; }
+.pf--done { text-align: center; display: flex; flex-direction: column; align-items: center; gap: 12px; padding: clamp(28px, 6vw, 56px) clamp(22px, 4vw, 40px); }
+.pf__check { width: 64px; height: 64px; border-radius: 999px; background: var(--crimson); color: var(--cream); display: grid; place-items: center; }
+.pf__doneSub { font-size: 16px; color: var(--ink-soft); margin: 0; max-width: 440px; }
+.pf__doneSub a { color: var(--crimson); font-weight: 600; }
+@media (max-width: 640px) {
+  .pf__pkgs { grid-template-columns: 1fr; }
+  .pf__row2 { grid-template-columns: 1fr; }
+  .pf__stepLabel { display: none; }
+}
