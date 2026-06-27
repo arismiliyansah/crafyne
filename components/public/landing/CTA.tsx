@@ -1,10 +1,8 @@
-import type { PricingTier, SiteSettings } from '@/lib/supabase/types'
-import ProjectFlow from '@/components/public/project-flow/ProjectFlow'
+import type { SiteSettings } from '@/lib/supabase/types'
 
-// CTA banner (navy panel) followed by the project wizard.
-export default function CTA({ settings, tiers }: { settings: SiteSettings; tiers: PricingTier[] }) {
+// CTA banner (navy panel). The full project wizard lives on /contact.
+export default function CTA({ settings }: { settings: SiteSettings }) {
   const email = settings.agency_email ?? 'contact@crafyne.com'
-  const careEnabled = Boolean((settings.pricing_care_title ?? '').trim() && (settings.pricing_care_price ?? '').trim())
   return (
     <section className="cta section--tight" id="contact">
       <div className="wrap">
@@ -23,8 +21,8 @@ export default function CTA({ settings, tiers }: { settings: SiteSettings; tiers
                 {settings.cta_sub ?? 'Tell us about the project. We reply within one working day with honest first impressions — and whether we’re the right team.'}
               </p>
               <div className="cta__row reveal" data-d="3">
-                <a className="btn btn--orange cta__primary" href="#contact-form">
-                  Start the conversation
+                <a className="btn btn--orange cta__primary" href="/contact">
+                  Start your project
                   <span className="btn__arrow" aria-hidden="true">
                     <svg viewBox="0 0 12 12"><path d="M3 9 9 3M9 3H4M9 3v5" stroke="#0E1530" strokeWidth="1.6" fill="none" strokeLinecap="round" /></svg>
                   </span>
@@ -38,10 +36,6 @@ export default function CTA({ settings, tiers }: { settings: SiteSettings; tiers
               </svg>
             </div>
           </div>
-        </div>
-
-        <div id="contact-form" style={{ marginTop: 28, maxWidth: 760, marginLeft: 'auto', marginRight: 'auto' }}>
-          <ProjectFlow tiers={tiers} careEnabled={careEnabled} />
         </div>
       </div>
     </section>
