@@ -59,6 +59,19 @@ export default async function SettingsPage() {
           </section>
 
           <section>
+            <h2 className="text-xs font-medium text-[#888] uppercase tracking-widest mb-5">Pricing — Care &amp; hosting</h2>
+            <div className="space-y-4">
+              <Input label="Title" name="pricing_care_title" defaultValue={s.pricing_care_title} placeholder="Care & hosting" hint="Leave empty to hide the add-on strip entirely." />
+              <Textarea label="Blurb" name="pricing_care_blurb" rows={2} defaultValue={s.pricing_care_blurb} placeholder="Optional. Keep your product secure, monitored, and online after launch." />
+              <div className="grid grid-cols-2 gap-4">
+                <Input label="Price" name="pricing_care_price" defaultValue={s.pricing_care_price} placeholder="from 200" hint='Prefix with "from" for a starting price. No $ sign.' />
+                <Input label="Unit" name="pricing_care_unit" defaultValue={s.pricing_care_unit} placeholder="/mo" />
+              </div>
+              <Input label="Features (comma-separated)" name="pricing_care_features" defaultValue={s.pricing_care_features} hint="Example: Security updates,Uptime monitoring & backups,Hosting / server,Small changes each month" />
+            </div>
+          </section>
+
+          <section>
             <h2 className="text-xs font-medium text-[#888] uppercase tracking-widest mb-5">Team Section</h2>
             <div className="space-y-4">
               <Input label="Eyebrow" name="team_eyebrow" defaultValue={s.team_eyebrow} placeholder="the studio" />

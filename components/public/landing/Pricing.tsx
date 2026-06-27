@@ -1,7 +1,15 @@
-import type { PricingTier } from '@/lib/supabase/types'
+import type { PricingTier, SiteSettings } from '@/lib/supabase/types'
 
-export default function Pricing({ tiers }: { tiers: PricingTier[] }) {
+export default function Pricing({ tiers, settings }: { tiers: PricingTier[]; settings: SiteSettings }) {
   if (tiers.length === 0) return null
+
+  const careTitle = (settings.pricing_care_title ?? '').trim()
+  const carePrice = (settings.pricing_care_price ?? '').trim()
+  const careUnit = (settings.pricing_care_unit ?? '/mo').trim()
+  const careBlurb = (settings.pricing_care_blurb ?? '').trim()
+  const careFeatures = (settings.pricing_care_features ?? '').split(',').map(s => s.trim()).filter(Boolean)
+  const careEnabled = Boolean(careTitle && carePrice)
+
   return (
     <section className="price section" id="pricing">
       <div className="wrap">
@@ -11,8 +19,8 @@ export default function Pricing({ tiers }: { tiers: PricingTier[] }) {
             Three ways to <span className="italic">work together</span>.
           </h2>
           <p className="price__sub reveal" data-d="2">
-            Every engagement is sized to the problem. Prices below are starting points —
-            we&rsquo;ll quote firmly after the first session.
+            Fixed, per-project pricing — you know the number before we start. Add optional
+            monthly care only if you need it. We&rsquo;ll quote firmly after the first session.
           </p>
         </div>
         <div className="price__grid">
@@ -55,6 +63,27 @@ export default function Pricing({ tiers }: { tiers: PricingTier[] }) {
             </article>
           ))}
         </div>
+
+        {careEnabled && (
+          <div className="price__care reveal" data-d="1">
+            <div className="price__careInfo">
+              <span className="price__careLabel mono">+ optional · monthly</span>
+              <h3 className="price__careName display">{careTitle}</h3>
+              {careBlurb && <p className="price__careBlurb">{careBlurb}</p>}
+              {careFeatures.length > 0 && (
+                <ul className="price__careFeats">
+                  {careFeatures.map((f, i) => <li key={i}>{f}</li>)}
+                </ul>
+              )}
+            </div>
+            <div className="price__carePrice tier__price">
+              {/^from\s+/i.test(carePrice) && <span className="tier__from mono">from</span>}
+              <span className="tier__currency">$</span>
+              <span className="tier__amt display">{carePrice.replace(/^from\s+/i, '')}</span>
+              <span className="tier__unit mono">{careUnit}</span>
+            </div>
+          </div>
+        )}
       </div>
     </section>
   )

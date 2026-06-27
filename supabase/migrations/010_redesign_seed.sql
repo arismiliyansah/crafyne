@@ -19,7 +19,12 @@ insert into site_settings (key, value) values
   ('stats_title',     'Eight years of shipped products, measured in trust not tickets.'),
   ('cta_eyebrow',     'next slot opens August 4'),
   ('cta_title',       'Let''s build something people open on purpose.'),
-  ('cta_sub',         'Tell us about the project. We reply within one working day with honest first impressions — and whether we''re the right team.')
+  ('cta_sub',         'Tell us about the project. We reply within one working day with honest first impressions — and whether we''re the right team.'),
+  ('pricing_care_title',    'Care & hosting'),
+  ('pricing_care_blurb',    'Optional. Keep your product secure, monitored, and online after launch — no big retainer.'),
+  ('pricing_care_price',    'from 200'),
+  ('pricing_care_unit',     '/mo'),
+  ('pricing_care_features', 'Security & dependency updates,Uptime monitoring & backups,Hosting / server management,Small changes each month')
 on conflict (key) do update set value = excluded.value;
 
 -- ── Services (5) — only if empty ──
@@ -46,9 +51,9 @@ where not exists (select 1 from stats);
 -- ── Pricing tiers (3) — only if empty ──
 insert into pricing_tiers (name, tag, price, unit, blurb, features, tone, cta_label, featured, display_order)
 select * from (values
-  ('Sprint','Two weeks, fixed scope','12,500','USD','For when you need a deliverable, not a discovery doc. We pick one problem and ship.', array['1 designer + 1 engineer','10 working days','Daily Loom updates','Shipped artifact (prototype or feature)','30-day Slack support'],'cream','Book a sprint',false,1),
-  ('Build','6–14 weeks, full team','from 48,000','USD / mo','Our most common engagement. A senior pair plus support — from scope to launch.', array['Senior pair + part-time PM','Weekly Thursday demo','Design system + production code','Live staging from week 1','30-day post-launch stabilization'],'crimson','Start a project',true,2),
-  ('Tend','Ongoing retainer','from 18,000','USD / mo','For teams that want a partner in the chair, not a vendor on call. Capacity-based, no minimums.', array['Reserved weekly capacity','Roadmap + critique sessions','Shared Linear board','Right of refusal on new clients','Quarterly product review'],'navy','Talk about a retainer',false,3)
+  ('Sprint','Two weeks, fixed scope','12,500','/project','For when you need a deliverable, not a discovery doc. We pick one problem and ship.', array['1 designer + 1 engineer','10 working days','Daily Loom updates','Shipped artifact (prototype or feature)','30-day Slack support'],'cream','Book a sprint',false,1),
+  ('Build','6–14 weeks, full team','from 48,000','/project','Our most common engagement. A senior pair plus support — from scope to launch.', array['Senior pair + part-time PM','Weekly Thursday demo','Design system + production code','Live staging from week 1','30-day post-launch stabilization'],'crimson','Start a project',true,2),
+  ('Tend','Large / multi-phase build','from 18,000','/project','For bigger or multi-phase products. A senior pair plus support, scoped in stages so you see value before committing to the next one.', array['Senior pair + part-time PM','Phased scope, fixed price per phase','Weekly demo + shared board','Design system + production code','Post-launch stabilization'],'navy','Talk it through',false,3)
 ) as v(name, tag, price, unit, blurb, features, tone, cta_label, featured, display_order)
 where not exists (select 1 from pricing_tiers);
 

@@ -62,7 +62,7 @@ export default async function HomePage() {
       <CaseStudies cases={cases} />
       <Team team={team} settings={settings} />
       <Testimonials testimonials={testimonials} />
-      <Pricing tiers={tiers} />
+      <Pricing tiers={tiers} settings={settings} />
       <TechStack groups={groups} />
       <CTA settings={settings} />
       <FAQ faqs={faqs} />
