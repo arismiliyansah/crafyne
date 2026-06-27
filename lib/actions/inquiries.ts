@@ -16,6 +16,9 @@ export async function submitInquiry(formData: FormData): Promise<{ error?: strin
   const budget_range = (formData.get('budget_range') as string ?? '').trim()
   const timeline     = (formData.get('timeline') as string ?? '').trim()
   const message      = (formData.get('message') as string ?? '').trim()
+  const pkg               = (formData.get('package') as string ?? '').trim()
+  const wants_care        = (formData.get('wants_care') as string ?? '') === 'true'
+  const design_references = (formData.get('design_references') as string ?? '').trim()
 
   if (!name)         return { error: 'Name is required.' }
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return { error: 'A valid email is required.' }
@@ -31,6 +34,9 @@ export async function submitInquiry(formData: FormData): Promise<{ error?: strin
     budget_range: budget_range || null,
     timeline:     timeline     || null,
     message,
+    package:           pkg               || null,
+    wants_care,
+    design_references: design_references || null,
   })
 
   if (error) return { error: 'Something went wrong. Please try again or email us directly.' }
@@ -51,12 +57,14 @@ export async function submitInquiry(formData: FormData): Promise<{ error?: strin
             <tr><td style="padding:8px 0;border-bottom:1px solid #eee;font-size:13px;color:#888">Company</td><td style="padding:8px 0;border-bottom:1px solid #eee;font-size:14px">${company || '—'}</td></tr>
             <tr><td style="padding:8px 0;border-bottom:1px solid #eee;font-size:13px;color:#888">Type</td><td style="padding:8px 0;border-bottom:1px solid #eee;font-size:14px">${project_type}</td></tr>
             <tr><td style="padding:8px 0;border-bottom:1px solid #eee;font-size:13px;color:#888">Budget</td><td style="padding:8px 0;border-bottom:1px solid #eee;font-size:14px">${budget_range || '—'}</td></tr>
-            <tr><td style="padding:8px 0;font-size:13px;color:#888">Timeline</td><td style="padding:8px 0;font-size:14px">${timeline || '—'}</td></tr>
+            <tr><td style="padding:8px 0;border-bottom:1px solid #eee;font-size:13px;color:#888">Timeline</td><td style="padding:8px 0;border-bottom:1px solid #eee;font-size:14px">${timeline || '—'}</td></tr>
+            <tr><td style="padding:8px 0;font-size:13px;color:#888">Package</td><td style="padding:8px 0;font-size:14px">${pkg || '—'}${wants_care ? ' + Care & hosting' : ''}</td></tr>
           </table>
           <div style="background:#f7f5f0;border-radius:6px;padding:16px 20px;margin-bottom:24px">
             <p style="font-size:13px;color:#888;margin:0 0 8px">Message</p>
             <p style="font-size:14px;line-height:1.7;margin:0">${message.replace(/\n/g, '<br/>')}</p>
           </div>
+          ${design_references ? `<div style="background:#f7f5f0;border-radius:6px;padding:16px 20px;margin-bottom:24px"><p style="font-size:13px;color:#888;margin:0 0 8px">Design references</p><p style="font-size:14px;line-height:1.7;margin:0">${design_references.replace(/\n/g, '<br/>')}</p></div>` : ''}
           <a href="https://crafyne.com/admin/inquiries" style="display:inline-block;background:#0F0F0D;color:#F4F2EC;text-decoration:none;font-size:13px;padding:10px 20px;border-radius:20px">View in CMS →</a>
         </div>
       `,
