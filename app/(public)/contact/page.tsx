@@ -1,10 +1,10 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { getSettings } from '@/lib/supabase/queries'
+import { getSettings, getPricingTiers } from '@/lib/supabase/queries'
 import Nav from '@/components/public/landing/Nav'
 import Footer from '@/components/public/landing/Footer'
 import RevealController from '@/components/public/landing/RevealController'
-import ContactForm from '@/components/public/landing/ContactForm'
+import ProjectFlow from '@/components/public/project-flow/ProjectFlow'
 
 export const metadata: Metadata = {
   title: 'Contact',
@@ -19,9 +19,13 @@ export const metadata: Metadata = {
   },
 }
 
-export default async function ContactPage() {
-  const settings = await getSettings()
+export default async function ContactPage({ searchParams }: { searchParams: Promise<{ package?: string; care?: string }> }) {
+  const [settings, tiers] = await Promise.all([getSettings(), getPricingTiers()])
+  const sp = await searchParams
   const email = settings.agency_email ?? 'contact@crafyne.com'
+  const careEnabled = Boolean((settings.pricing_care_title ?? '').trim() && (settings.pricing_care_price ?? '').trim())
+  const initialPackage = sp.package ? (tiers.find(t => t.name.toLowerCase() === sp.package!.toLowerCase())?.name ?? '') : ''
+  const initialCare = sp.care === '1' || sp.care === 'true'
 
   return (
     <>
@@ -69,7 +73,7 @@ export default async function ContactPage() {
               </div>
             </aside>
 
-            <ContactForm />
+            <ProjectFlow tiers={tiers} careEnabled={careEnabled} initialPackage={initialPackage} initialCare={initialCare} />
           </div>
         </section>
       </main>

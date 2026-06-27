@@ -64,7 +64,7 @@ export default async function HomePage() {
       <Testimonials testimonials={testimonials} />
       <Pricing tiers={tiers} settings={settings} />
       <TechStack groups={groups} />
-      <CTA settings={settings} />
+      <CTA settings={settings} tiers={tiers} />
       <FAQ faqs={faqs} />
       <Footer settings={settings} />
     </>

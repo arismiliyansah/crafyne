@@ -41,7 +41,7 @@ export default function Hero({ settings }: { settings: SiteSettings }) {
 
         <div className="hero__row">
           <div className="hero__cta reveal" data-d="3">
-            <a href="#contact" className="btn btn--cream hero__primary">
+            <a href="/contact" className="btn btn--cream hero__primary">
               {settings.hero_cta_primary ?? 'Start a project'}
               <span className="btn__arrow" aria-hidden="true">
                 <svg viewBox="0 0 12 12"><path d="M3 9 9 3M9 3H4M9 3v5" stroke="#B91C1C" strokeWidth="1.6" fill="none" strokeLinecap="round" /></svg>

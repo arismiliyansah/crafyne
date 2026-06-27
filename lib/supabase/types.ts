@@ -171,6 +171,9 @@ export interface ProjectInquiry {
   budget_range: string | null
   timeline: string | null
   message: string
+  package: string | null
+  wants_care: boolean
+  design_references: string | null
   status: 'new' | 'reviewing' | 'contacted' | 'won' | 'lost'
   admin_notes: string | null
   created_at: string
