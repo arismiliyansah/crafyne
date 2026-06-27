@@ -1,9 +1,10 @@
-import type { SiteSettings } from '@/lib/supabase/types'
-import InquiryForm from '@/components/public/InquiryForm'
+import type { PricingTier, SiteSettings } from '@/lib/supabase/types'
+import ProjectFlow from '@/components/public/project-flow/ProjectFlow'
 
-// CTA banner (navy panel) followed by the real inquiry form.
-export default function CTA({ settings }: { settings: SiteSettings }) {
+// CTA banner (navy panel) followed by the project wizard.
+export default function CTA({ settings, tiers }: { settings: SiteSettings; tiers: PricingTier[] }) {
   const email = settings.agency_email ?? 'contact@crafyne.com'
+  const careEnabled = Boolean((settings.pricing_care_title ?? '').trim() && (settings.pricing_care_price ?? '').trim())
   return (
     <section className="cta section--tight" id="contact">
       <div className="wrap">
@@ -39,20 +40,8 @@ export default function CTA({ settings }: { settings: SiteSettings }) {
           </div>
         </div>
 
-        <div
-          id="contact-form"
-          style={{
-            marginTop: 28,
-            maxWidth: 760,
-            marginLeft: 'auto',
-            marginRight: 'auto',
-            background: 'var(--navy)',
-            color: 'var(--cream)',
-            borderRadius: 24,
-            padding: 'clamp(28px, 5vw, 52px)',
-          }}
-        >
-          <InquiryForm />
+        <div id="contact-form" style={{ marginTop: 28, maxWidth: 760, marginLeft: 'auto', marginRight: 'auto' }}>
+          <ProjectFlow tiers={tiers} careEnabled={careEnabled} />
         </div>
       </div>
     </section>
