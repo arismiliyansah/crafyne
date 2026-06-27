@@ -66,10 +66,25 @@ export default async function InquiryDetailPage({ params }: { params: Promise<{ 
               <ReadOnlyField label="Timeline" value={inq.timeline} />
             </div>
 
+            <ReadOnlyField label="Package" value={inq.package ? `${inq.package}${inq.wants_care ? ' + Care & hosting' : ''}` : (inq.wants_care ? 'Care & hosting' : null)} />
+
             <div>
               <p className="text-[10.5px] font-medium tracking-[0.1em] uppercase text-[#aaa] mb-2">Message</p>
               <p className="text-sm text-[#333] leading-[1.75] whitespace-pre-wrap">{inq.message}</p>
             </div>
+
+            {inq.design_references && (
+              <div>
+                <p className="text-[10.5px] font-medium tracking-[0.1em] uppercase text-[#aaa] mb-2">Design references</p>
+                <div className="text-sm text-[#333] leading-relaxed space-y-1">
+                  {inq.design_references.split('\n').filter(Boolean).map((line: string, i: number) =>
+                    /^https?:\/\//.test(line)
+                      ? <a key={i} href={line} target="_blank" rel="noopener noreferrer" className="block text-[#B91C1C] underline break-all">{line}</a>
+                      : <p key={i} className="break-all">{line}</p>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
         </div>
 

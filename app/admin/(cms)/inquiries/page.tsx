@@ -14,7 +14,7 @@ export default async function InquiriesPage() {
   const supabase = await createClient()
   const { data: items } = await supabase
     .from('project_inquiries')
-    .select('id, name, email, company, project_type, budget_range, status, created_at')
+    .select('id, name, email, company, project_type, budget_range, status, created_at, package, wants_care')
     .order('created_at', { ascending: false })
 
   return (
@@ -49,7 +49,10 @@ export default async function InquiriesPage() {
                       <p className="text-xs text-[#aaa] mt-0.5">{item.email}</p>
                     </td>
                     <td className="px-5 py-3.5 text-[#888]">{item.company || '—'}</td>
-                    <td className="px-5 py-3.5 text-[#888]">{item.project_type}</td>
+                    <td className="px-5 py-3.5 text-[#888]">
+                      {item.project_type}
+                      {item.package && <span className="ml-2 inline-block text-[11px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-black/5 text-[#555]">{item.package}{item.wants_care ? ' + care' : ''}</span>}
+                    </td>
                     <td className="px-5 py-3.5 text-[#888] text-xs">{item.budget_range || '—'}</td>
                     <td className="px-5 py-3.5">
                       <span className={`text-xs px-2 py-0.5 rounded-full capitalize ${STATUS_STYLES[item.status] ?? 'bg-black/5 text-[#888]'}`}>
