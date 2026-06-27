@@ -99,15 +99,13 @@ export default function CaseStudies({ cases }: { cases: CaseStudy[] }) {
                   <span>{c.kind ?? c.tagline}</span><span>·</span><span>{c.year}</span>
                 </div>
                 <h3 className="case__name display">{c.name}</h3>
-                <div className="case__foot">
-                  <Link className="case__link" href={`/work/${c.slug}`}>
-                    Read case study
-                    <span className="case__arr" aria-hidden="true">
-                      <svg viewBox="0 0 14 14"><path d="M3 11 11 3M11 3H5M11 3v6" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" /></svg>
-                    </span>
-                  </Link>
-                  {c.outcome && <span className="case__result mono">{c.outcome}</span>}
-                </div>
+                <p className="case__teaser">{c.summary ?? c.tagline}</p>
+                <Link className="case__link" href={`/work/${c.slug}`}>
+                  Read case study
+                  <span className="case__arr" aria-hidden="true">
+                    <svg viewBox="0 0 14 14"><path d="M3 11 11 3M11 3H5M11 3v6" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" /></svg>
+                  </span>
+                </Link>
               </div>
             </article>
           ))}
