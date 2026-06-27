@@ -54,7 +54,7 @@ export default function Pricing({ tiers, settings }: { tiers: PricingTier[]; set
                   </li>
                 ))}
               </ul>
-              <a className={'btn tier__cta ' + (t.featured ? 'btn--cream' : t.tone === 'navy' ? 'btn--cream' : 'btn--ink')} href="#contact">
+              <a className={'btn tier__cta ' + (t.featured ? 'btn--cream' : t.tone === 'navy' ? 'btn--cream' : 'btn--ink')} href={`/contact?package=${t.name.toLowerCase()}`}>
                 {t.cta_label}
                 <span className="btn__arrow" aria-hidden="true">
                   <svg viewBox="0 0 12 12"><path d="M3 9 9 3M9 3H4M9 3v5" stroke={t.featured ? '#B91C1C' : t.tone === 'navy' ? '#0E1530' : 'white'} strokeWidth="1.6" fill="none" strokeLinecap="round" /></svg>
@@ -76,11 +76,14 @@ export default function Pricing({ tiers, settings }: { tiers: PricingTier[]; set
                 </ul>
               )}
             </div>
-            <div className="price__carePrice tier__price">
-              {/^from\s+/i.test(carePrice) && <span className="tier__from mono">from</span>}
-              <span className="tier__currency">$</span>
-              <span className="tier__amt display">{carePrice.replace(/^from\s+/i, '')}</span>
-              <span className="tier__unit mono">{careUnit}</span>
+            <div className="price__careAction">
+              <div className="price__carePrice tier__price">
+                {/^from\s+/i.test(carePrice) && <span className="tier__from mono">from</span>}
+                <span className="tier__currency">$</span>
+                <span className="tier__amt display">{carePrice.replace(/^from\s+/i, '')}</span>
+                <span className="tier__unit mono">{careUnit}</span>
+              </div>
+              <a className="pf-careLink" href="/contact?care=1">Add to a project →</a>
             </div>
           </div>
         )}
