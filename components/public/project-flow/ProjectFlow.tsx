@@ -82,7 +82,6 @@ export default function ProjectFlow({
     fd.set('wants_care', form.wantsCare ? 'true' : '')
     const refs = form.references.map(r => r.trim()).filter(Boolean).join('\n')
     fd.set('design_references', refs + (form.referenceNotes.trim() ? `\n\nNotes: ${form.referenceNotes.trim()}` : ''))
-    fd.set('website', form.website)
     startTransition(async () => {
       const res = await submitInquiry(fd)
       if (res.error) setError(res.error)
@@ -101,10 +100,6 @@ export default function ProjectFlow({
 
   return (
     <div className="pf">
-      <input type="text" tabIndex={-1} autoComplete="off" aria-hidden="true"
-        value={form.website} onChange={e => patch({ website: e.target.value })}
-        style={{ position: 'absolute', left: '-9999px', width: 1, height: 1, opacity: 0 }} />
-
       <Progress steps={STEPS.map(s => s.label)} current={index} reduce={reduce} />
 
       <div className="pf__stage">

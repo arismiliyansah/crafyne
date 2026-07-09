@@ -14,7 +14,6 @@ export interface FormState {
   references: string[]     // URL strings; always at least one (possibly empty) row
   referenceNotes: string
   how: string
-  website: string          // honeypot
 }
 
 export interface StepProps {
@@ -44,5 +43,4 @@ export const emptyForm = (initialPackage = '', initialCare = false): FormState =
   references: [''],
   referenceNotes: '',
   how: '',
-  website: '',
 })
