@@ -73,7 +73,6 @@ export default function ProjectFlow({
     fd.set('email', form.email)
     fd.set('company', form.company)
     fd.set('project_type', form.services.join(', ') || 'General inquiry')
-    fd.set('budget_range', form.budget)
     fd.set('timeline', form.timeline)
     const message = [form.description, form.role && `Role: ${form.role}`, form.how && `Found us via: ${form.how}`]
       .filter(Boolean).join('\n\n')

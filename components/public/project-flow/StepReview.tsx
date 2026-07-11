@@ -21,7 +21,7 @@ export default function StepReview({ value, onEdit }: { value: FormState; onEdit
       <div className="pf__head"><span className="eyebrow pf__eye">/ step 04</span><h2 className="pf__title">Quick review</h2></div>
       <dl className="pf__review">
         <Row label="Package" onEdit={() => onEdit(0)}>{pkg}{value.wantsCare ? ' + Care & hosting' : ''}</Row>
-        <Row label="Scope" onEdit={() => onEdit(1)}>{[value.services.join(', '), value.budget, value.timeline].filter(Boolean).join(' · ') || '—'}</Row>
+        <Row label="Scope" onEdit={() => onEdit(1)}>{[value.services.join(', '), value.timeline].filter(Boolean).join(' · ') || '—'}</Row>
         <Row label="You" onEdit={() => onEdit(2)}>{[value.name, value.email, value.company].filter(Boolean).join(' · ') || '—'}</Row>
         <Row label="Project" onEdit={() => onEdit(2)}>{value.description || '—'}</Row>
         {refs.length > 0 && <Row label="References" onEdit={() => onEdit(2)}>{refs.length} link{refs.length > 1 ? 's' : ''}</Row>}

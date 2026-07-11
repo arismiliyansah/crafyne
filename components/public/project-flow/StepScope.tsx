@@ -2,7 +2,7 @@
 
 import { motion } from 'motion/react'
 import type { StepProps } from './types'
-import { SERVICES, BUDGETS, TIMELINES } from './types'
+import { SERVICES, TIMELINES } from './types'
 
 export default function StepScope({ value, onChange }: StepProps) {
   const toggle = (s: string) =>
@@ -19,21 +19,12 @@ export default function StepScope({ value, onChange }: StepProps) {
           ))}
         </div>
       </div>
-      <div className="pf__row2">
-        <div className="field">
-          <label className="field__label">Budget</label>
-          <select value={value.budget} onChange={e => onChange({ budget: e.target.value })}>
-            <option value="">Pick a range</option>
-            {BUDGETS.map(b => <option key={b} value={b}>{b}</option>)}
-          </select>
-        </div>
-        <div className="field">
-          <label className="field__label">Timeline</label>
-          <select value={value.timeline} onChange={e => onChange({ timeline: e.target.value })}>
-            <option value="">When to start?</option>
-            {TIMELINES.map(t => <option key={t} value={t}>{t}</option>)}
-          </select>
-        </div>
+      <div className="field">
+        <label className="field__label">Timeline</label>
+        <select value={value.timeline} onChange={e => onChange({ timeline: e.target.value })}>
+          <option value="">When to start?</option>
+          {TIMELINES.map(t => <option key={t} value={t}>{t}</option>)}
+        </select>
       </div>
     </div>
   )
