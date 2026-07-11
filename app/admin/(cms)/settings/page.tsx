@@ -44,6 +44,8 @@ export default async function SettingsPage() {
               <Input label="Location" name="agency_location" defaultValue={s.agency_location} />
               <Textarea label="Footer tagline" name="agency_tagline" rows={2} defaultValue={s.agency_tagline} />
               <Input label="Contact invite text" name="contact_invite" defaultValue={s.contact_invite} />
+              <Input label="Availability label" name="contact_availability_label" defaultValue={s.contact_availability_label} placeholder="Booking now" />
+              <Input label="Availability text" name="contact_availability_text" defaultValue={s.contact_availability_text} placeholder="Now booking · Q3 2026" hint="Shown on the contact page availability chip. Leave empty for the default." />
             </div>
           </section>
 

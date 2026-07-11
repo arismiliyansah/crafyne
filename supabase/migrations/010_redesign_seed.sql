@@ -20,6 +20,8 @@ insert into site_settings (key, value) values
   ('cta_eyebrow',     'next slot opens August 4'),
   ('cta_title',       'Let''s build something people open on purpose.'),
   ('cta_sub',         'Tell us about the project. We reply within one working day with honest first impressions — and whether we''re the right team.'),
+  ('contact_availability_label', 'Booking now'),
+  ('contact_availability_text',  'Now booking · Q3 2026'),
   ('pricing_care_title',    'Care & hosting'),
   ('pricing_care_blurb',    'Optional. Keep your product secure, monitored, and online after launch — no big retainer.'),
   ('pricing_care_price',    'from 200'),

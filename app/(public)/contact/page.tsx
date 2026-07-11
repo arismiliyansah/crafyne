@@ -52,8 +52,8 @@ export default async function ContactPage({ searchParams }: { searchParams: Prom
           <div className="wrap contactGrid">
             <aside className="contactInfo">
               <div className="contactInfo__avail reveal">
-                <div className="contactInfo__availLabel"><span className="contactInfo__dot" /> Booking now</div>
-                <div style={{ fontFamily: 'var(--font-display)', fontSize: 20, fontWeight: 600 }}>Next slot opens Aug 4, 2026</div>
+                <div className="contactInfo__availLabel"><span className="contactInfo__dot" /> {settings.contact_availability_label || 'Booking now'}</div>
+                <div style={{ fontFamily: 'var(--font-display)', fontSize: 20, fontWeight: 600 }}>{settings.contact_availability_text || 'Now booking · Q3 2026'}</div>
                 <div style={{ fontSize: 13, opacity: 0.7, marginTop: 4 }}>We respond to all inquiries within one working day, Asia/Jakarta hours.</div>
               </div>
               <div className="contactInfo__group reveal" data-d="1">
