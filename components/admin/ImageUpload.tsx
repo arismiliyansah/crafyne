@@ -13,7 +13,12 @@ type Props = {
   aspect?: string
 }
 
-const ACCEPT = 'image/jpeg,image/png,image/webp,image/gif,image/svg+xml'
+// SVG sengaja TIDAK diizinkan. Bucket "media" bersifat publik dan Supabase
+// menyajikan file dengan content-type aslinya, jadi membuka URL sebuah SVG
+// langsung akan mengeksekusi <script> di dalamnya — stored XSS di domain
+// yang sama. Pakai PNG/WebP untuk logo, atau taruh SVG tepercaya di
+// public/brand/ lewat repo.
+const ACCEPT = 'image/jpeg,image/png,image/webp,image/gif'
 const MAX_BYTES = 10 * 1024 * 1024
 
 function makeKey(folder: string, file: File) {
@@ -37,7 +42,7 @@ export default function ImageUpload({
   const upload = useCallback(async (file: File) => {
     setError(null)
     if (!ACCEPT.split(',').includes(file.type)) {
-      setError('File type not supported. Use JPG, PNG, WebP, GIF, or SVG.')
+      setError('File type not supported. Use JPG, PNG, WebP, or GIF.')
       return
     }
     if (file.size > MAX_BYTES) {
