@@ -100,8 +100,14 @@ export async function submitInquiry(formData: FormData): Promise<{ error?: strin
         </div>
       `,
     })
-  } catch {
-    // Email failure is non-fatal — inquiry is already saved to the database
+  } catch (e) {
+    // Sengaja tidak fatal: inquiry-nya sudah tersimpan, dan menolak lead asli
+    // gara-gara email gagal jauh lebih mahal daripada notifikasi yang telat.
+    //
+    // Tapi HARUS tercatat. Sebelumnya blok ini kosong, jadi RESEND_API_KEY yang
+    // dicabut membuat setiap notifikasi hilang tanpa satu baris pun di log —
+    // inquiry tetap masuk database, tapi tidak ada yang tahu harus membukanya.
+    console.error('[inquiry] notifikasi email GAGAL dikirim:', e instanceof Error ? e.message : e)
   }
 
   return {}
