@@ -1,4 +1,3 @@
-import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import AdminHeader from '@/components/admin/AdminHeader'
 import DeleteButton from '@/components/admin/DeleteButton'

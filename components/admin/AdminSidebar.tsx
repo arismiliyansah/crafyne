@@ -21,13 +21,18 @@ const navItems = [
 ]
 
 export default function AdminSidebar({ email }: { email: string }) {
-  const [open, setOpen] = useState(false)
   const pathname = usePathname()
 
-  useEffect(() => { setOpen(false) }, [pathname])
+  // Status menu disimpan sebagai "terbuka di halaman mana", bukan boolean yang
+  // di-reset lewat useEffect. Begitu pindah halaman, pathname berubah dan
+  // `open` otomatis jadi false — tanpa render bertingkat.
+  const [openOn, setOpenOn] = useState<string | null>(null)
+  const open = openOn === pathname
+  const close = () => setOpenOn(null)
+  const toggle = () => setOpenOn(o => (o === pathname ? null : pathname))
 
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setOpen(false) }
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setOpenOn(null) }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
   }, [])
@@ -43,7 +48,7 @@ export default function AdminSidebar({ email }: { email: string }) {
     <>
       <button
         type="button"
-        onClick={() => setOpen(v => !v)}
+        onClick={toggle}
         aria-label={open ? 'Close menu' : 'Open menu'}
         className="md:hidden fixed top-3 left-3 z-50 w-10 h-10 rounded-md bg-white border border-black/8 shadow-sm flex flex-col items-center justify-center gap-[5px]"
       >
@@ -53,7 +58,7 @@ export default function AdminSidebar({ email }: { email: string }) {
       </button>
 
       <div
-        onClick={() => setOpen(false)}
+        onClick={close}
         aria-hidden="true"
         className={`md:hidden fixed inset-0 z-30 bg-black/40 transition-opacity duration-200 ${
           open ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
