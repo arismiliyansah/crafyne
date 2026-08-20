@@ -17,15 +17,16 @@ Perintah lain:
 | Perintah            | Kegunaan                                      |
 | ------------------- | --------------------------------------------- |
 | `npm run build`     | Build produksi                                 |
-| `npm start`         | Jalankan hasil build                           |
-| `npm run start:prod`| Jalankan lewat `server.js` (custom HTTP server)|
+| `npm start`         | Jalankan hasil build secara lokal              |
+| `npm run preview`   | Jalankan di runtime `workerd` asli Cloudflare  |
+| `npm run deploy`    | Build + deploy ke Cloudflare Workers           |
 | `npm run lint`      | ESLint                                         |
 
 ## Susunan
 
 ```
 app/(public)/     Halaman publik — statis + ISR 60 detik
-app/admin/        CMS, dilindungi proxy.ts + cek sesi di layout
+app/admin/        CMS, dijaga getUser() di layout (cms)
 lib/supabase/     Client, tipe Database, query publik
 lib/actions/      Server action (mutasi CMS, submit inquiry)
 components/       landing/ = seksi publik, admin/ = form CMS
@@ -62,7 +63,41 @@ Dua hal yang mudah menjebak:
   disentuh hanya tersaring dan Postgres melapor "sukses, 0 baris". Karena itu
   setiap mutasi diakhiri `.select('id')` dan jumlah barisnya diperiksa.
 
-## Migrasi
+## Deploy
+
+Situs berjalan di **Cloudflare Workers** lewat `@opennextjs/cloudflare`, dengan
+domain `crafyne.com` terpasang sebagai custom domain.
+
+```bash
+npm run deploy
+```
+
+Perintah itu menjalankan **build lalu deploy**. Jangan panggil
+`opennextjs-cloudflare deploy` sendirian — ia hanya mengunggah `.open-next`
+yang sudah ada, sehingga kamu bisa men-deploy bundel basi tanpa sadar.
+
+Beberapa hal yang mudah menjebak:
+
+- **`proxy.ts` tidak boleh ada.** Adapter Cloudflare belum mendukung middleware
+  runtime Node, dan di Next 16 proxy selalu berjalan di runtime itu tanpa opsi
+  untuk mengubahnya. Penjagaan `/admin` ditangani layout `(cms)` dan RLS.
+- **`NEXT_PUBLIC_*` ditanam saat build**, bukan dibaca saat runtime. Build wajib
+  bisa membacanya, kalau tidak halaman statis akan ter-generate kosong.
+- **Rahasia dibaca saat runtime** dan harus dipasang sebagai secret Worker:
+  `wrangler secret put RESEND_API_KEY --name crafyne-com`. Menaruhnya di
+  `.env.local` saja tidak akan sampai ke produksi.
+- Cache ISR tersimpan di bucket R2 `crafyne-com-isr-cache`.
+
+Nama Worker-nya `crafyne-com` — **bukan** `crafyne`, yang sudah dipakai proyek
+lain di akun yang sama.
+
+## Email
+
+Notifikasi inquiry dikirim lewat Resend dari domain terverifikasi
+`crafyne.com`. Pengirimnya bisa diubah lewat `RESEND_FROM`; penerimanya diatur
+dari **/admin/settings → Notification email**, bukan dari kode.
+
+## Migrasi database
 
 File di `supabase/migrations/` dijalankan manual, berurutan, lewat
 Supabase Dashboard → SQL Editor. Tidak ada runner otomatis.
