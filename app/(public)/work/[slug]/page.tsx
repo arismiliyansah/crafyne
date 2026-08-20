@@ -11,7 +11,7 @@ export const revalidate = 60
 
 export async function generateStaticParams() {
   try {
-    const items = await getCaseStudies(true, true)
+    const items = await getCaseStudies()
     return items.map(cs => ({ slug: cs.slug }))
   } catch {
     return []
@@ -38,7 +38,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function CaseStudyPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
-  const [cs, all, settings] = await Promise.all([getCaseStudyBySlug(slug), getCaseStudies(true), getSettings()])
+  const [cs, all, settings] = await Promise.all([getCaseStudyBySlug(slug), getCaseStudies(), getSettings()])
   if (!cs) notFound()
 
   const idx = all.findIndex(c => c.slug === slug)

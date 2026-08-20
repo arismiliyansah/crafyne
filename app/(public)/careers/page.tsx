@@ -5,6 +5,8 @@ import Nav from '@/components/public/landing/Nav'
 import Footer from '@/components/public/landing/Footer'
 import RevealController from '@/components/public/landing/RevealController'
 
+export const revalidate = 60
+
 export const metadata: Metadata = {
   title: 'Careers',
   description: 'Work with a small, senior software studio in Jakarta. We hire roughly one person every 18 months — maybe that’s you.',

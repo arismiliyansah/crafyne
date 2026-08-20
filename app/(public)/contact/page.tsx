@@ -6,6 +6,8 @@ import Footer from '@/components/public/landing/Footer'
 import RevealController from '@/components/public/landing/RevealController'
 import ProjectFlow from '@/components/public/project-flow/ProjectFlow'
 
+export const revalidate = 60
+
 export const metadata: Metadata = {
   title: 'Contact',
   description: 'Start a project with Crafyne. Tell us what you’re building — a real human replies within one working day.',
@@ -19,13 +21,12 @@ export const metadata: Metadata = {
   },
 }
 
-export default async function ContactPage({ searchParams }: { searchParams: Promise<{ package?: string; care?: string }> }) {
+// Deep-link ?package=…&care=1 dibaca di dalam ProjectFlow (client), bukan di
+// sini: membaca searchParams di server akan memaksa halaman ini jadi dynamic.
+export default async function ContactPage() {
   const [settings, tiers] = await Promise.all([getSettings(), getPricingTiers()])
-  const sp = await searchParams
   const email = settings.agency_email ?? 'contact@crafyne.com'
   const careEnabled = Boolean((settings.pricing_care_title ?? '').trim() && (settings.pricing_care_price ?? '').trim())
-  const initialPackage = sp.package ? (tiers.find(t => t.name.toLowerCase() === sp.package!.toLowerCase())?.name ?? '') : ''
-  const initialCare = sp.care === '1' || sp.care === 'true'
 
   return (
     <>
@@ -73,7 +74,7 @@ export default async function ContactPage({ searchParams }: { searchParams: Prom
               </div>
             </aside>
 
-            <ProjectFlow tiers={tiers} careEnabled={careEnabled} initialPackage={initialPackage} initialCare={initialCare} />
+            <ProjectFlow tiers={tiers} careEnabled={careEnabled} />
           </div>
         </section>
       </main>

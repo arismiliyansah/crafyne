@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useState, useCallback, useEffect } from 'react'
+import { useRef, useState, useCallback } from 'react'
 import NextImage from 'next/image'
 import { createClient } from '@/lib/supabase/client'
 
@@ -13,7 +13,12 @@ type Props = {
   aspect?: string
 }
 
-const ACCEPT = 'image/jpeg,image/png,image/webp,image/gif,image/svg+xml'
+// SVG sengaja TIDAK diizinkan. Bucket "media" bersifat publik dan Supabase
+// menyajikan file dengan content-type aslinya, jadi membuka URL sebuah SVG
+// langsung akan mengeksekusi <script> di dalamnya — stored XSS di domain
+// yang sama. Pakai PNG/WebP untuk logo, atau taruh SVG tepercaya di
+// public/brand/ lewat repo.
+const ACCEPT = 'image/jpeg,image/png,image/webp,image/gif'
 const MAX_BYTES = 10 * 1024 * 1024
 
 function makeKey(folder: string, file: File) {
@@ -32,12 +37,20 @@ export default function ImageUpload({
   const [drag, setDrag] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
 
-  useEffect(() => { setUrl(defaultValue) }, [defaultValue])
+  // Selaraskan dengan prop saat render, bukan lewat effect. Di sini
+  // defaultValue berupa string sehingga tidak pernah loop seperti
+  // MultiImageUpload, tapi polanya disamakan supaya tidak ada yang meniru
+  // versi yang salah.
+  const [syncedDefault, setSyncedDefault] = useState(defaultValue)
+  if (syncedDefault !== defaultValue) {
+    setSyncedDefault(defaultValue)
+    setUrl(defaultValue)
+  }
 
   const upload = useCallback(async (file: File) => {
     setError(null)
     if (!ACCEPT.split(',').includes(file.type)) {
-      setError('File type not supported. Use JPG, PNG, WebP, GIF, or SVG.')
+      setError('File type not supported. Use JPG, PNG, WebP, or GIF.')
       return
     }
     if (file.size > MAX_BYTES) {

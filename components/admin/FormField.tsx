@@ -50,13 +50,7 @@ export function Toggle({ label, name, defaultChecked }: { label: string; name: s
   )
 }
 
-export function SubmitButton({ label = 'Save' }: { label?: string }) {
-  return (
-    <button
-      type="submit"
-      className="bg-[#111] text-[#F5F4F0] px-6 py-2.5 rounded-md text-sm font-medium hover:opacity-80 transition"
-    >
-      {label}
-    </button>
-  )
-}
+// SubmitButton perlu useFormStatus (client-only), jadi ia tinggal di file
+// terpisah. Di-re-export dari sini supaya semua halaman admin tetap
+// mengimpornya dari '@/components/admin/FormField' seperti sebelumnya.
+export { SubmitButton } from './SubmitButton'
