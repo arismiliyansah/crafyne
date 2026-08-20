@@ -4,6 +4,7 @@ import { Resend } from 'resend'
 import { headers } from 'next/headers'
 import { createStaticClient, createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
+import { redirect } from 'next/navigation'
 import { verifyTurnstile } from '@/lib/turnstile'
 import type { ProjectInquiry } from '@/lib/supabase/types'
 
@@ -133,4 +134,8 @@ export async function updateInquiry(formData: FormData): Promise<void> {
   }
 
   revalidatePath('/admin/inquiries')
+  revalidatePath(`/admin/inquiries/${id}`)
+  // Tetap di halaman detail seperti sebelumnya, hanya ditambah penanda supaya
+  // SaveToast bisa memastikan ke user bahwa perubahannya benar-benar masuk.
+  redirect(`/admin/inquiries/${id}?saved=${Date.now()}`)
 }

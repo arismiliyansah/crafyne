@@ -40,6 +40,17 @@ function assertAffected(result: MutationResult, what: string): void {
   throw new Error(`Gagal ${what}: tidak ada baris yang berubah.`)
 }
 
+/**
+ * Tujuan redirect setelah action berhasil.
+ *
+ * Timestamp-nya bukan hiasan: tanpa itu, menyimpan dua kali berturut-turut
+ * menghasilkan URL identik, komponen SaveToast tidak remount, dan konfirmasi
+ * kedua tidak pernah muncul.
+ */
+function doneUrl(path: string, kind: 'saved' | 'deleted' = 'saved'): string {
+  return `${path}?${kind}=${Date.now()}`
+}
+
 // ── Work / Case Studies ──────────────────────────────────────
 
 export async function upsertCaseStudy(formData: FormData) {
@@ -74,7 +85,7 @@ export async function upsertCaseStudy(formData: FormData) {
   revalidatePath('/admin/work')
   revalidatePath('/')
   revalidatePath('/work')
-  redirect('/admin/work')
+  redirect(doneUrl('/admin/work'))
 }
 
 export async function deleteCaseStudy(id: string) {
@@ -83,7 +94,7 @@ export async function deleteCaseStudy(id: string) {
   revalidatePath('/admin/work')
   revalidatePath('/')
   revalidatePath('/work')
-  redirect('/admin/work')
+  redirect(doneUrl('/admin/work', 'deleted'))
 }
 
 // ── Blog Posts ───────────────────────────────────────────────
@@ -111,7 +122,7 @@ export async function upsertPost(formData: FormData) {
 
   revalidatePath('/admin/blog')
   revalidatePath('/blog')
-  redirect('/admin/blog')
+  redirect(doneUrl('/admin/blog'))
 }
 
 export async function deletePost(id: string) {
@@ -119,7 +130,7 @@ export async function deletePost(id: string) {
   assertAffected(await supabase.from('posts').delete().eq('id', id).select('id'), 'menghapus artikel')
   revalidatePath('/admin/blog')
   revalidatePath('/blog')
-  redirect('/admin/blog')
+  redirect(doneUrl('/admin/blog', 'deleted'))
 }
 
 // ── Team Members ─────────────────────────────────────────────
@@ -147,7 +158,7 @@ export async function upsertTeamMember(formData: FormData) {
 
   revalidatePath('/admin/team')
   revalidatePath('/')
-  redirect('/admin/team')
+  redirect(doneUrl('/admin/team'))
 }
 
 export async function deleteTeamMember(id: string) {
@@ -155,7 +166,7 @@ export async function deleteTeamMember(id: string) {
   assertAffected(await supabase.from('team_members').delete().eq('id', id).select('id'), 'menghapus anggota tim')
   revalidatePath('/admin/team')
   revalidatePath('/')
-  redirect('/admin/team')
+  redirect(doneUrl('/admin/team', 'deleted'))
 }
 
 // ── Testimonials ─────────────────────────────────────────────
@@ -182,7 +193,7 @@ export async function upsertTestimonial(formData: FormData) {
 
   revalidatePath('/admin/testimonials')
   revalidatePath('/')
-  redirect('/admin/testimonials')
+  redirect(doneUrl('/admin/testimonials'))
 }
 
 export async function deleteTestimonial(id: string) {
@@ -190,7 +201,7 @@ export async function deleteTestimonial(id: string) {
   assertAffected(await supabase.from('testimonials').delete().eq('id', id).select('id'), 'menghapus testimoni')
   revalidatePath('/admin/testimonials')
   revalidatePath('/')
-  redirect('/admin/testimonials')
+  redirect(doneUrl('/admin/testimonials', 'deleted'))
 }
 
 // ── Site Settings ────────────────────────────────────────────
@@ -251,6 +262,9 @@ export async function saveSettings(formData: FormData) {
 
   revalidatePath('/')
   revalidatePath('/admin/settings')
+  // Sebelumnya berhenti di sini: tanpa redirect, menekan "Save All Settings"
+  // benar-benar tidak mengubah apa pun di layar.
+  redirect(doneUrl('/admin/settings'))
 }
 
 // ── Services ─────────────────────────────────────────────────
@@ -273,13 +287,13 @@ export async function upsertService(formData: FormData) {
     id ? await table.update(payload).eq('id', id).select('id')
        : await table.insert(payload).select('id'),
     'menyimpan service')
-  revalidatePath('/admin/services'); revalidatePath('/'); redirect('/admin/services')
+  revalidatePath('/admin/services'); revalidatePath('/'); redirect(doneUrl('/admin/services'))
 }
 
 export async function deleteService(id: string) {
   const supabase = await createClient()
   assertAffected(await supabase.from('services').delete().eq('id', id).select('id'), 'menghapus service')
-  revalidatePath('/admin/services'); revalidatePath('/'); redirect('/admin/services')
+  revalidatePath('/admin/services'); revalidatePath('/'); redirect(doneUrl('/admin/services', 'deleted'))
 }
 
 // ── Stats ────────────────────────────────────────────────────
@@ -299,13 +313,13 @@ export async function upsertStat(formData: FormData) {
     id ? await table.update(payload).eq('id', id).select('id')
        : await table.insert(payload).select('id'),
     'menyimpan stat')
-  revalidatePath('/admin/stats'); revalidatePath('/'); redirect('/admin/stats')
+  revalidatePath('/admin/stats'); revalidatePath('/'); redirect(doneUrl('/admin/stats'))
 }
 
 export async function deleteStat(id: string) {
   const supabase = await createClient()
   assertAffected(await supabase.from('stats').delete().eq('id', id).select('id'), 'menghapus stat')
-  revalidatePath('/admin/stats'); revalidatePath('/'); redirect('/admin/stats')
+  revalidatePath('/admin/stats'); revalidatePath('/'); redirect(doneUrl('/admin/stats', 'deleted'))
 }
 
 // ── Pricing ──────────────────────────────────────────────────
@@ -330,13 +344,13 @@ export async function upsertPricingTier(formData: FormData) {
     id ? await table.update(payload).eq('id', id).select('id')
        : await table.insert(payload).select('id'),
     'menyimpan paket harga')
-  revalidatePath('/admin/pricing'); revalidatePath('/'); redirect('/admin/pricing')
+  revalidatePath('/admin/pricing'); revalidatePath('/'); redirect(doneUrl('/admin/pricing'))
 }
 
 export async function deletePricingTier(id: string) {
   const supabase = await createClient()
   assertAffected(await supabase.from('pricing_tiers').delete().eq('id', id).select('id'), 'menghapus paket harga')
-  revalidatePath('/admin/pricing'); revalidatePath('/'); redirect('/admin/pricing')
+  revalidatePath('/admin/pricing'); revalidatePath('/'); redirect(doneUrl('/admin/pricing', 'deleted'))
 }
 
 // ── Tech groups ──────────────────────────────────────────────
@@ -354,13 +368,13 @@ export async function upsertTechGroup(formData: FormData) {
     id ? await table.update(payload).eq('id', id).select('id')
        : await table.insert(payload).select('id'),
     'menyimpan tech group')
-  revalidatePath('/admin/tech-stack'); revalidatePath('/'); redirect('/admin/tech-stack')
+  revalidatePath('/admin/tech-stack'); revalidatePath('/'); redirect(doneUrl('/admin/tech-stack'))
 }
 
 export async function deleteTechGroup(id: string) {
   const supabase = await createClient()
   assertAffected(await supabase.from('tech_groups').delete().eq('id', id).select('id'), 'menghapus tech group')
-  revalidatePath('/admin/tech-stack'); revalidatePath('/'); redirect('/admin/tech-stack')
+  revalidatePath('/admin/tech-stack'); revalidatePath('/'); redirect(doneUrl('/admin/tech-stack', 'deleted'))
 }
 
 // ── FAQs ─────────────────────────────────────────────────────
@@ -378,11 +392,11 @@ export async function upsertFaq(formData: FormData) {
     id ? await table.update(payload).eq('id', id).select('id')
        : await table.insert(payload).select('id'),
     'menyimpan FAQ')
-  revalidatePath('/admin/faq'); revalidatePath('/'); redirect('/admin/faq')
+  revalidatePath('/admin/faq'); revalidatePath('/'); redirect(doneUrl('/admin/faq'))
 }
 
 export async function deleteFaq(id: string) {
   const supabase = await createClient()
   assertAffected(await supabase.from('faqs').delete().eq('id', id).select('id'), 'menghapus FAQ')
-  revalidatePath('/admin/faq'); revalidatePath('/'); redirect('/admin/faq')
+  revalidatePath('/admin/faq'); revalidatePath('/'); redirect(doneUrl('/admin/faq', 'deleted'))
 }

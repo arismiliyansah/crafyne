@@ -1,6 +1,8 @@
+import { Suspense } from 'react'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import AdminSidebar from '@/components/admin/AdminSidebar'
+import SaveToast from '@/components/admin/SaveToast'
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const supabase = await createClient()
@@ -13,6 +15,11 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       <main className="md:ml-56 min-w-0">
         {children}
       </main>
+      {/* Satu toast untuk semua halaman CMS — dipasang di layout, bukan di
+          tiap halaman, supaya 13 form Save tidak perlu diubah satu-satu. */}
+      <Suspense fallback={null}>
+        <SaveToast />
+      </Suspense>
     </div>
   )
 }
