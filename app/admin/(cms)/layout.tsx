@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import AdminSidebar from '@/components/admin/AdminSidebar'
 import SaveToast from '@/components/admin/SaveToast'
+import SessionKeeper from '@/components/admin/SessionKeeper'
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const supabase = await createClient()
@@ -20,6 +21,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       <Suspense fallback={null}>
         <SaveToast />
       </Suspense>
+      <SessionKeeper />
     </div>
   )
 }
