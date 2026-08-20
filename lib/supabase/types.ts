@@ -1,5 +1,17 @@
 export type Json = string | number | boolean | null | { [key: string]: Json } | Json[]
 
+/**
+ * Skema database yang ditulis tangan.
+ *
+ * Relationships/Views/Functions WAJIB ada meski kosong: supabase-js mencocokkan
+ * tipe ini dengan GenericSchema-nya, dan kalau tidak cocok ia diam-diam mundur
+ * ke tipe kosong — semua baris jadi `never` dan setiap query harus di-cast
+ * `as any`. Itulah kenapa file ini dulu ada tapi tidak berefek apa pun.
+ *
+ * Kalau skema di Supabase berubah, regenerate dengan:
+ *   npx supabase gen types typescript --project-id <ref> > lib/supabase/types.ts
+ * (lalu kembalikan lagi convenience type di bagian bawah file).
+ */
 export interface Database {
   public: {
     Tables: {
@@ -27,6 +39,7 @@ export interface Database {
         }
         Insert: Omit<Database['public']['Tables']['case_studies']['Row'], 'id' | 'created_at' | 'updated_at'>
         Update: Partial<Database['public']['Tables']['case_studies']['Insert']>
+        Relationships: []
       }
       posts: {
         Row: {
@@ -43,6 +56,7 @@ export interface Database {
         }
         Insert: Omit<Database['public']['Tables']['posts']['Row'], 'id' | 'created_at' | 'updated_at'>
         Update: Partial<Database['public']['Tables']['posts']['Insert']>
+        Relationships: []
       }
       team_members: {
         Row: {
@@ -58,6 +72,7 @@ export interface Database {
         }
         Insert: Omit<Database['public']['Tables']['team_members']['Row'], 'id'>
         Update: Partial<Database['public']['Tables']['team_members']['Insert']>
+        Relationships: []
       }
       testimonials: {
         Row: {
@@ -72,6 +87,7 @@ export interface Database {
         }
         Insert: Omit<Database['public']['Tables']['testimonials']['Row'], 'id'>
         Update: Partial<Database['public']['Tables']['testimonials']['Insert']>
+        Relationships: []
       }
       services: {
         Row: {
@@ -87,6 +103,7 @@ export interface Database {
         }
         Insert: Omit<Database['public']['Tables']['services']['Row'], 'id'>
         Update: Partial<Database['public']['Tables']['services']['Insert']>
+        Relationships: []
       }
       stats: {
         Row: {
@@ -99,6 +116,7 @@ export interface Database {
         }
         Insert: Omit<Database['public']['Tables']['stats']['Row'], 'id'>
         Update: Partial<Database['public']['Tables']['stats']['Insert']>
+        Relationships: []
       }
       pricing_tiers: {
         Row: {
@@ -116,6 +134,7 @@ export interface Database {
         }
         Insert: Omit<Database['public']['Tables']['pricing_tiers']['Row'], 'id'>
         Update: Partial<Database['public']['Tables']['pricing_tiers']['Insert']>
+        Relationships: []
       }
       tech_groups: {
         Row: {
@@ -126,6 +145,7 @@ export interface Database {
         }
         Insert: Omit<Database['public']['Tables']['tech_groups']['Row'], 'id'>
         Update: Partial<Database['public']['Tables']['tech_groups']['Insert']>
+        Relationships: []
       }
       faqs: {
         Row: {
@@ -136,13 +156,55 @@ export interface Database {
         }
         Insert: Omit<Database['public']['Tables']['faqs']['Row'], 'id'>
         Update: Partial<Database['public']['Tables']['faqs']['Insert']>
+        Relationships: []
       }
       site_settings: {
         Row: { key: string; value: string | null; updated_at: string }
         Insert: Omit<Database['public']['Tables']['site_settings']['Row'], 'updated_at'>
         Update: Partial<Database['public']['Tables']['site_settings']['Insert']>
+        Relationships: []
+      }
+      project_inquiries: {
+        Row: {
+          id: string
+          name: string
+          email: string
+          company: string | null
+          project_type: string
+          /** Tidak lagi diisi wizard sejak commit 511f261; tetap ada untuk baris lama. */
+          budget_range: string | null
+          timeline: string | null
+          message: string
+          package: string | null
+          wants_care: boolean
+          design_references: string | null
+          status: 'new' | 'reviewing' | 'contacted' | 'won' | 'lost'
+          admin_notes: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          name: string
+          email: string
+          company?: string | null
+          project_type: string
+          budget_range?: string | null
+          timeline?: string | null
+          message: string
+          package?: string | null
+          wants_care?: boolean
+          design_references?: string | null
+          status?: Database['public']['Tables']['project_inquiries']['Row']['status']
+          admin_notes?: string | null
+        }
+        Update: Partial<Database['public']['Tables']['project_inquiries']['Insert']> & {
+          updated_at?: string
+        }
+        Relationships: []
       }
     }
+    Views: Record<string, never>
+    Functions: Record<string, never>
   }
 }
 
@@ -162,20 +224,4 @@ export type PricingTier = Database['public']['Tables']['pricing_tiers']['Row']
 export type TechGroup   = Database['public']['Tables']['tech_groups']['Row']
 export type Faq         = Database['public']['Tables']['faqs']['Row']
 
-export interface ProjectInquiry {
-  id: string
-  name: string
-  email: string
-  company: string | null
-  project_type: string
-  budget_range: string | null
-  timeline: string | null
-  message: string
-  package: string | null
-  wants_care: boolean
-  design_references: string | null
-  status: 'new' | 'reviewing' | 'contacted' | 'won' | 'lost'
-  admin_notes: string | null
-  created_at: string
-  updated_at: string
-}
+export type ProjectInquiry = Database['public']['Tables']['project_inquiries']['Row']
