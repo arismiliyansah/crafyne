@@ -49,3 +49,9 @@ next-env.d.ts
 .open-next/
 .wrangler/
 cloudflare-env.d.ts
+
+# Catatan berisi kredensial. File semacam ini gampang ter-commit tanpa sengaja
+# lewat `git add -A` karena namanya tidak cocok dengan pola .env*.
+ehuhu.md
+*.secrets.md
+secrets*.md
