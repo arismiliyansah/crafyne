@@ -1,15 +1,19 @@
 'use client'
 
-import { useState, useTransition } from 'react'
+import Link from 'next/link'
+import { useCallback, useEffect, useState, useTransition } from 'react'
 import { motion, AnimatePresence, useReducedMotion } from 'motion/react'
 import type { PricingTier } from '@/lib/supabase/types'
 import { submitInquiry } from '@/lib/actions/inquiries'
 import { type FormState, type StepId, emptyForm, isValidEmail, NOT_SURE } from './types'
 import Progress from './Progress'
+import Turnstile from './Turnstile'
 import StepPackage from './StepPackage'
 import StepScope from './StepScope'
 import StepDetails from './StepDetails'
 import StepReview from './StepReview'
+
+const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ?? ''
 
 const STEPS: { id: StepId; label: string }[] = [
   { id: 'package', label: 'Package' },
@@ -30,28 +34,48 @@ function SuccessView({ name, reduce }: { name: string; reduce: boolean }) {
         </svg>
       </motion.div>
       <h2 className="pf__title">Got it{name ? `, ${name}` : ''}.</h2>
-      <p className="pf__doneSub">A real person replies within one working day. While you wait, see our <a href="/work">recent work</a>.</p>
+      <p className="pf__doneSub">A real person replies within one working day. While you wait, see our <Link href="/work">recent work</Link>.</p>
     </div>
   )
 }
 
 export default function ProjectFlow({
-  tiers, careEnabled, initialPackage = '', initialCare = false,
+  tiers, careEnabled,
 }: {
   tiers: PricingTier[]
   careEnabled: boolean
-  initialPackage?: string
-  initialCare?: boolean
 }) {
   const reduce = !!useReducedMotion()
-  const [form, setForm] = useState<FormState>(() => emptyForm(initialPackage, initialCare))
+  const [form, setForm] = useState<FormState>(() => emptyForm())
   const [index, setIndex] = useState(0)
   const [dir, setDir] = useState(1)
   const [error, setError] = useState<string | null>(null)
   const [submitted, setSubmitted] = useState(false)
   const [isPending, startTransition] = useTransition()
+  const [captcha, setCaptcha] = useState('')
 
   const patch = (p: Partial<FormState>) => setForm(f => ({ ...f, ...p }))
+
+  // Deep-link dari halaman pricing: /contact?package=studio&care=1
+  //
+  // Sengaja dibaca di client setelah mount, bukan lewat `searchParams` di
+  // server component: `searchParams` memaksa /contact jadi dynamic rendering
+  // dan mematikan prerender + ISR untuk seluruh halaman. Dijalankan sekali
+  // saja — kalau ikut berubah, ia akan menimpa pilihan user.
+  useEffect(() => {
+    const sp = new URLSearchParams(window.location.search)
+    const pkg = sp.get('package')
+    const care = sp.get('care')
+    const matched = pkg ? tiers.find(t => t.name.toLowerCase() === pkg.toLowerCase())?.name : undefined
+    const wantsCare = care === '1' || care === 'true'
+    if (!matched && !wantsCare) return
+    setForm(f => ({
+      ...f,
+      package:   matched ?? f.package,
+      wantsCare: wantsCare || f.wantsCare,
+    }))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const stepValid = (i: number): boolean => {
     const s = STEPS[i].id
@@ -81,12 +105,15 @@ export default function ProjectFlow({
     fd.set('wants_care', form.wantsCare ? 'true' : '')
     const refs = form.references.map(r => r.trim()).filter(Boolean).join('\n')
     fd.set('design_references', refs + (form.referenceNotes.trim() ? `\n\nNotes: ${form.referenceNotes.trim()}` : ''))
+    fd.set('turnstile_token', captcha)
     startTransition(async () => {
       const res = await submitInquiry(fd)
       if (res.error) setError(res.error)
       else setSubmitted(true)
     })
   }
+
+  const handleToken = useCallback((t: string) => setCaptcha(t), [])
 
   if (submitted) return <SuccessView name={form.name} reduce={reduce} />
 
@@ -114,12 +141,16 @@ export default function ProjectFlow({
         </AnimatePresence>
       </div>
 
+      {isReview && TURNSTILE_SITE_KEY && (
+        <Turnstile siteKey={TURNSTILE_SITE_KEY} onToken={handleToken} />
+      )}
+
       {error && <p className="pf__error">{error}</p>}
 
       <div className="pf__nav">
         {index > 0 ? <button type="button" className="btn btn--ghost" onClick={() => go(index - 1)}>Back</button> : <span />}
         {isReview ? (
-          <button type="button" className="btn btn--ink" disabled={isPending} onClick={onSubmit}>
+          <button type="button" className="btn btn--ink" disabled={isPending || (!!TURNSTILE_SITE_KEY && !captcha)} onClick={onSubmit}>
             {isPending ? 'Sending…' : 'Send to Crafyne'}
           </button>
         ) : (

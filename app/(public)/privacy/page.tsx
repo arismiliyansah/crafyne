@@ -4,6 +4,8 @@ import { getSettings } from '@/lib/supabase/queries'
 import Nav from '@/components/public/landing/Nav'
 import Footer from '@/components/public/landing/Footer'
 
+export const revalidate = 60
+
 export const metadata: Metadata = {
   title: 'Privacy Policy',
   description: 'How Crafyne collects, stores, and protects your personal data.',
@@ -45,15 +47,25 @@ export default async function PrivacyPage() {
               <ul>
                 <li>Your name</li>
                 <li>Your email address</li>
-                <li>Company name (optional)</li>
-                <li>Project type, budget range, and timeline (optional)</li>
-                <li>A description of your project</li>
+                <li>Company name and your role (optional)</li>
+                <li>Project type, timeline, and the package you picked (optional)</li>
+                <li>A description of your project, and any design references you share</li>
+                <li>How you heard about us (optional)</li>
               </ul>
               <p>
-                We do not collect any information automatically beyond what your browser sends as part of a
-                normal HTTP request (IP address, browser type). We do not use tracking pixels, fingerprinting,
-                or third-party analytics on this site.
+                We do not use tracking pixels or fingerprinting, and we never sell or share your data
+                with advertisers. Two third-party services do run on this site:
               </p>
+              <ul>
+                <li>
+                  <strong>Umami</strong> — privacy-focused, cookieless analytics. It records page views
+                  and referrers in aggregate, and does not build a profile of you.
+                </li>
+                <li>
+                  <strong>Cloudflare Turnstile</strong> — a bot check on the project form. It sees your
+                  IP address to tell humans from automated submissions.
+                </li>
+              </ul>
             </section>
 
             <section>

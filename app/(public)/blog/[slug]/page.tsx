@@ -11,7 +11,7 @@ export const revalidate = 60
 
 export async function generateStaticParams() {
   try {
-    const posts = await getPosts(true, true)
+    const posts = await getPosts()
     return posts.map(p => ({ slug: p.slug }))
   } catch {
     return []

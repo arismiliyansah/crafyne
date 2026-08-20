@@ -27,9 +27,9 @@ export const TIMELINES = ['ASAP', 'Within a month', 'Within a quarter', 'Just ex
 
 export const isValidEmail = (e: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e.trim())
 
-export const emptyForm = (initialPackage = '', initialCare = false): FormState => ({
-  package: initialPackage,
-  wantsCare: initialCare,
+export const emptyForm = (): FormState => ({
+  package: '',
+  wantsCare: false,
   services: [],
   timeline: '',
   name: '',
