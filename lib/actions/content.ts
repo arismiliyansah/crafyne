@@ -4,6 +4,42 @@ import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 
+/**
+ * Supabase mengembalikan kegagalan sebagai nilai (`{ error }`), bukan exception.
+ * Sebelumnya semua action di file ini membuang nilai itu lalu tetap memanggil
+ * redirect(), jadi penolakan RLS atau error DB tampak persis seperti sukses:
+ * admin melihat halaman daftar, padahal tidak ada yang tersimpan.
+ *
+ * assertOk() menghentikan alur sebelum redirect. Pesan asli dicatat ke log
+ * server (di produksi Next menyembunyikan pesan error dari browser dan hanya
+ * mengirim `digest` — digest itulah yang mencocokkan tampilan dengan log ini).
+ */
+type MutationResult = {
+  error: { message: string; details?: string | null } | null
+  data?: unknown[] | null
+}
+
+function assertOk(result: MutationResult, what: string): void {
+  if (!result.error) return
+  console.error(`[cms] gagal ${what}:`, result.error.message, result.error.details ?? '')
+  throw new Error(`Gagal ${what}: ${result.error.message}`)
+}
+
+/**
+ * RLS pada UPDATE dan DELETE tidak menghasilkan error — baris yang tidak boleh
+ * disentuh hanya tersaring, sehingga Postgres melapor "sukses, 0 baris". Jadi
+ * assertOk() saja belum cukup: penolakan izin akan lolos sebagai sukses.
+ *
+ * Karena itu setiap mutasi diakhiri .select('id'). Kalau tidak ada baris yang
+ * kembali, tidak ada yang berubah — dan itu bukan sukses.
+ */
+function assertAffected(result: MutationResult, what: string): void {
+  assertOk(result, what)
+  if (result.data && result.data.length > 0) return
+  console.error(`[cms] ${what}: 0 baris terpengaruh — RLS menolak, atau barisnya sudah tidak ada`)
+  throw new Error(`Gagal ${what}: tidak ada baris yang berubah.`)
+}
+
 // ── Work / Case Studies ──────────────────────────────────────
 
 export async function upsertCaseStudy(formData: FormData) {
@@ -29,13 +65,11 @@ export async function upsertCaseStudy(formData: FormData) {
     tags:            (formData.get('tags') as string).split(',').map(t => t.trim()).filter(Boolean),
   }
 
-  if (id) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    await (supabase.from('case_studies') as any).update(payload).eq('id', id)
-  } else {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    await (supabase.from('case_studies') as any).insert(payload)
-  }
+  const table = supabase.from('case_studies')
+  assertAffected(
+    id ? await table.update(payload).eq('id', id).select('id')
+       : await table.insert(payload).select('id'),
+    'menyimpan case study')
 
   revalidatePath('/admin/work')
   revalidatePath('/')
@@ -45,7 +79,7 @@ export async function upsertCaseStudy(formData: FormData) {
 
 export async function deleteCaseStudy(id: string) {
   const supabase = await createClient()
-  await supabase.from('case_studies').delete().eq('id', id)
+  assertAffected(await supabase.from('case_studies').delete().eq('id', id).select('id'), 'menghapus case study')
   revalidatePath('/admin/work')
   revalidatePath('/')
   revalidatePath('/work')
@@ -69,13 +103,11 @@ export async function upsertPost(formData: FormData) {
     published_at:    published ? new Date().toISOString() : null,
   }
 
-  if (id) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    await (supabase.from('posts') as any).update(payload).eq('id', id)
-  } else {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    await (supabase.from('posts') as any).insert(payload)
-  }
+  const table = supabase.from('posts')
+  assertAffected(
+    id ? await table.update(payload).eq('id', id).select('id')
+       : await table.insert(payload).select('id'),
+    'menyimpan artikel')
 
   revalidatePath('/admin/blog')
   revalidatePath('/blog')
@@ -84,7 +116,7 @@ export async function upsertPost(formData: FormData) {
 
 export async function deletePost(id: string) {
   const supabase = await createClient()
-  await supabase.from('posts').delete().eq('id', id)
+  assertAffected(await supabase.from('posts').delete().eq('id', id).select('id'), 'menghapus artikel')
   revalidatePath('/admin/blog')
   revalidatePath('/blog')
   redirect('/admin/blog')
@@ -107,13 +139,11 @@ export async function upsertTeamMember(formData: FormData) {
     active:        formData.get('active') === 'on',
   }
 
-  if (id) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    await (supabase.from('team_members') as any).update(payload).eq('id', id)
-  } else {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    await (supabase.from('team_members') as any).insert(payload)
-  }
+  const table = supabase.from('team_members')
+  assertAffected(
+    id ? await table.update(payload).eq('id', id).select('id')
+       : await table.insert(payload).select('id'),
+    'menyimpan anggota tim')
 
   revalidatePath('/admin/team')
   revalidatePath('/')
@@ -122,7 +152,7 @@ export async function upsertTeamMember(formData: FormData) {
 
 export async function deleteTeamMember(id: string) {
   const supabase = await createClient()
-  await supabase.from('team_members').delete().eq('id', id)
+  assertAffected(await supabase.from('team_members').delete().eq('id', id).select('id'), 'menghapus anggota tim')
   revalidatePath('/admin/team')
   revalidatePath('/')
   redirect('/admin/team')
@@ -144,13 +174,11 @@ export async function upsertTestimonial(formData: FormData) {
     display_order:  parseInt(formData.get('display_order') as string) || 0,
   }
 
-  if (id) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    await (supabase.from('testimonials') as any).update(payload).eq('id', id)
-  } else {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    await (supabase.from('testimonials') as any).insert(payload)
-  }
+  const table = supabase.from('testimonials')
+  assertAffected(
+    id ? await table.update(payload).eq('id', id).select('id')
+       : await table.insert(payload).select('id'),
+    'menyimpan testimoni')
 
   revalidatePath('/admin/testimonials')
   revalidatePath('/')
@@ -159,7 +187,7 @@ export async function upsertTestimonial(formData: FormData) {
 
 export async function deleteTestimonial(id: string) {
   const supabase = await createClient()
-  await supabase.from('testimonials').delete().eq('id', id)
+  assertAffected(await supabase.from('testimonials').delete().eq('id', id).select('id'), 'menghapus testimoni')
   revalidatePath('/admin/testimonials')
   revalidatePath('/')
   redirect('/admin/testimonials')
@@ -167,17 +195,59 @@ export async function deleteTestimonial(id: string) {
 
 // ── Site Settings ────────────────────────────────────────────
 
+/**
+ * Key yang boleh masuk ke site_settings.
+ *
+ * Sebelumnya saveSettings meng-upsert SETIAP key yang ada di FormData, jadi
+ * field apa pun yang diselipkan ke form akan tersimpan sebagai setting.
+ * Daftar ini diambil persis dari nama field di app/admin/(cms)/settings/page.tsx —
+ * kalau menambah field baru di sana, tambahkan juga namanya di sini.
+ */
+const ALLOWED_SETTING_KEYS = new Set([
+  'agency_email',
+  'agency_location',
+  'agency_tagline',
+  'contact_availability_label',
+  'contact_availability_text',
+  'contact_invite',
+  'footer_copyright',
+  'footer_facebook_url',
+  'footer_github_url',
+  'footer_instagram_url',
+  'footer_threads_url',
+  'hero_cta_primary',
+  'hero_cta_secondary',
+  'hero_eyebrow',
+  'hero_headline',
+  'hero_subheadline',
+  'pricing_care_blurb',
+  'pricing_care_features',
+  'pricing_care_price',
+  'pricing_care_title',
+  'pricing_care_unit',
+  'proof_clients',
+  'services',
+  'team_eyebrow',
+  'team_sub',
+  'team_title',
+])
+
 export async function saveSettings(formData: FormData) {
   const supabase = await createClient()
-  const keys = Array.from(formData.keys())
 
-  await Promise.all(
-    keys.map(key =>
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (supabase.from('site_settings') as any)
-        .upsert({ key, value: formData.get(key) as string }, { onConflict: 'key' })
-    )
-  )
+  const submitted = Array.from(formData.keys())
+  const unknown = submitted.filter(k => !ALLOWED_SETTING_KEYS.has(k))
+  if (unknown.length > 0) {
+    console.error('[cms] key setting tak dikenal ditolak:', unknown.join(', '))
+    throw new Error(`Key setting tak dikenal: ${unknown.join(', ')}. Tambahkan ke ALLOWED_SETTING_KEYS kalau memang field baru.`)
+  }
+
+  const rows = submitted.map(key => ({ key, value: formData.get(key) as string }))
+
+  // Satu upsert batch, bukan N request paralel: lebih cepat dan errornya
+  // ketahuan sebagai satu hasil, bukan tercecer di Promise.all.
+  assertAffected(await supabase.from('site_settings').upsert(rows, { onConflict: 'key' }).select('key'),
+    'menyimpan pengaturan')
 
   revalidatePath('/')
   revalidatePath('/admin/settings')
@@ -198,16 +268,17 @@ export async function upsertService(formData: FormData) {
     display_order: parseInt(formData.get('display_order') as string) || 0,
     active:        formData.get('active') === 'on',
   }
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  if (id) await (supabase.from('services') as any).update(payload).eq('id', id)
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  else await (supabase.from('services') as any).insert(payload)
+  const table = supabase.from('services')
+  assertAffected(
+    id ? await table.update(payload).eq('id', id).select('id')
+       : await table.insert(payload).select('id'),
+    'menyimpan service')
   revalidatePath('/admin/services'); revalidatePath('/'); redirect('/admin/services')
 }
 
 export async function deleteService(id: string) {
   const supabase = await createClient()
-  await supabase.from('services').delete().eq('id', id)
+  assertAffected(await supabase.from('services').delete().eq('id', id).select('id'), 'menghapus service')
   revalidatePath('/admin/services'); revalidatePath('/'); redirect('/admin/services')
 }
 
@@ -223,16 +294,17 @@ export async function upsertStat(formData: FormData) {
     label:         (formData.get('label') as string).trim(),
     display_order: parseInt(formData.get('display_order') as string) || 0,
   }
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  if (id) await (supabase.from('stats') as any).update(payload).eq('id', id)
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  else await (supabase.from('stats') as any).insert(payload)
+  const table = supabase.from('stats')
+  assertAffected(
+    id ? await table.update(payload).eq('id', id).select('id')
+       : await table.insert(payload).select('id'),
+    'menyimpan stat')
   revalidatePath('/admin/stats'); revalidatePath('/'); redirect('/admin/stats')
 }
 
 export async function deleteStat(id: string) {
   const supabase = await createClient()
-  await supabase.from('stats').delete().eq('id', id)
+  assertAffected(await supabase.from('stats').delete().eq('id', id).select('id'), 'menghapus stat')
   revalidatePath('/admin/stats'); revalidatePath('/'); redirect('/admin/stats')
 }
 
@@ -253,16 +325,17 @@ export async function upsertPricingTier(formData: FormData) {
     featured:      formData.get('featured') === 'on',
     display_order: parseInt(formData.get('display_order') as string) || 0,
   }
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  if (id) await (supabase.from('pricing_tiers') as any).update(payload).eq('id', id)
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  else await (supabase.from('pricing_tiers') as any).insert(payload)
+  const table = supabase.from('pricing_tiers')
+  assertAffected(
+    id ? await table.update(payload).eq('id', id).select('id')
+       : await table.insert(payload).select('id'),
+    'menyimpan paket harga')
   revalidatePath('/admin/pricing'); revalidatePath('/'); redirect('/admin/pricing')
 }
 
 export async function deletePricingTier(id: string) {
   const supabase = await createClient()
-  await supabase.from('pricing_tiers').delete().eq('id', id)
+  assertAffected(await supabase.from('pricing_tiers').delete().eq('id', id).select('id'), 'menghapus paket harga')
   revalidatePath('/admin/pricing'); revalidatePath('/'); redirect('/admin/pricing')
 }
 
@@ -276,16 +349,17 @@ export async function upsertTechGroup(formData: FormData) {
     items:         (formData.get('items') as string).split(',').map(s => s.trim()).filter(Boolean),
     display_order: parseInt(formData.get('display_order') as string) || 0,
   }
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  if (id) await (supabase.from('tech_groups') as any).update(payload).eq('id', id)
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  else await (supabase.from('tech_groups') as any).insert(payload)
+  const table = supabase.from('tech_groups')
+  assertAffected(
+    id ? await table.update(payload).eq('id', id).select('id')
+       : await table.insert(payload).select('id'),
+    'menyimpan tech group')
   revalidatePath('/admin/tech-stack'); revalidatePath('/'); redirect('/admin/tech-stack')
 }
 
 export async function deleteTechGroup(id: string) {
   const supabase = await createClient()
-  await supabase.from('tech_groups').delete().eq('id', id)
+  assertAffected(await supabase.from('tech_groups').delete().eq('id', id).select('id'), 'menghapus tech group')
   revalidatePath('/admin/tech-stack'); revalidatePath('/'); redirect('/admin/tech-stack')
 }
 
@@ -299,15 +373,16 @@ export async function upsertFaq(formData: FormData) {
     answer:        (formData.get('answer') as string).trim(),
     display_order: parseInt(formData.get('display_order') as string) || 0,
   }
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  if (id) await (supabase.from('faqs') as any).update(payload).eq('id', id)
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  else await (supabase.from('faqs') as any).insert(payload)
+  const table = supabase.from('faqs')
+  assertAffected(
+    id ? await table.update(payload).eq('id', id).select('id')
+       : await table.insert(payload).select('id'),
+    'menyimpan FAQ')
   revalidatePath('/admin/faq'); revalidatePath('/'); redirect('/admin/faq')
 }
 
 export async function deleteFaq(id: string) {
   const supabase = await createClient()
-  await supabase.from('faqs').delete().eq('id', id)
+  assertAffected(await supabase.from('faqs').delete().eq('id', id).select('id'), 'menghapus FAQ')
   revalidatePath('/admin/faq'); revalidatePath('/'); redirect('/admin/faq')
 }
