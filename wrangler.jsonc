@@ -36,5 +36,12 @@
     "ADMIN_EMAIL": "me@arismiliyansah.com"
   },
 
+  // Custom domain. Cloudflare membuat record DNS-nya sendiri dan menyajikan
+  // sertifikat Universal SSL, jadi Hostinger keluar sepenuhnya dari jalur.
+  "routes": [
+    { "pattern": "crafyne.com", "custom_domain": true },
+    { "pattern": "www.crafyne.com", "custom_domain": true }
+  ],
+
   "observability": { "enabled": true }
 }
