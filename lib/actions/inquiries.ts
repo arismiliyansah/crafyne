@@ -73,12 +73,24 @@ export async function submitInquiry(formData: FormData): Promise<{ error?: strin
     return { error: 'Something went wrong. Please try again or email us directly.' }
   }
 
+  // Penerima notifikasi diambil dari CMS supaya bisa diganti sendiri lewat
+  // /admin/settings tanpa deploy ulang. Kalau kosong, jatuh ke ADMIN_EMAIL
+  // (variabel Worker) — jadi menambahkan setting ini tidak mengubah apa pun
+  // sampai kamu benar-benar mengisinya.
+  const { data: notifySetting } = await supabase
+    .from('site_settings')
+    .select('value')
+    .eq('key', 'notification_email')
+    .maybeSingle()
+
+  const notifyTo = notifySetting?.value?.trim() || process.env.ADMIN_EMAIL || 'contact@crafyne.com'
+
   // Send email notification — non-fatal if it fails
   try {
     const resend = new Resend(process.env.RESEND_API_KEY)
     await resend.emails.send({
       from: 'Crafyne CMS <onboarding@resend.dev>',
-      to: process.env.ADMIN_EMAIL ?? 'contact@crafyne.com',
+      to: notifyTo,
       subject: `New inquiry from ${name}`,
       html: `
         <div style="font-family:sans-serif;max-width:600px;margin:0 auto;color:#1a1a18">

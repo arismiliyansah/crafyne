@@ -215,6 +215,7 @@ export async function deleteTestimonial(id: string) {
  * kalau menambah field baru di sana, tambahkan juga namanya di sini.
  */
 const ALLOWED_SETTING_KEYS = new Set([
+  'notification_email',
   'agency_email',
   'agency_location',
   'agency_tagline',
@@ -246,7 +247,10 @@ const ALLOWED_SETTING_KEYS = new Set([
 export async function saveSettings(formData: FormData) {
   const supabase = await createClient()
 
-  const submitted = Array.from(formData.keys())
+  // Next menyisipkan field internalnya sendiri ($ACTION_ID_…, $ACTION_REF_…)
+  // ke FormData setiap server action. Itu bukan setting, dan menolaknya membuat
+  // seluruh halaman Settings gagal disimpan — jadi disaring lebih dulu.
+  const submitted = Array.from(formData.keys()).filter(k => !k.startsWith('$ACTION'))
   const unknown = submitted.filter(k => !ALLOWED_SETTING_KEYS.has(k))
   if (unknown.length > 0) {
     console.error('[cms] key setting tak dikenal ditolak:', unknown.join(', '))
