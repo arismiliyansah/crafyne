@@ -1,0 +1,15 @@
+# Semua file teks disimpan dan di-checkout dengan LF, apa pun OS-nya.
+# Tanpa ini, editor/tool di Windows atau yang meniru CRLF menulis ulang
+# seluruh file dan membuat diff palsu ribuan baris.
+* text=auto eol=lf
+
+# Aset biner — jangan pernah disentuh normalisasi.
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.webp binary
+*.gif  binary
+*.ico  binary
+*.pdf  binary
+*.woff  binary
+*.woff2 binary
