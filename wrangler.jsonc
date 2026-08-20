@@ -1,0 +1,19 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "crafyne",
+  "main": ".open-next/worker.js",
+
+  // nodejs_compat wajib untuk Next.js di Workers, dan compatibility_date
+  // harus 2024-09-23 atau lebih baru.
+  "compatibility_date": "2026-08-20",
+  "compatibility_flags": ["nodejs_compat"],
+
+  // Halaman statis dan aset dilayani langsung dari edge, tidak menyentuh Worker.
+  // Setelah perbaikan rendering kemarin, ini mencakup 23 dari 28 rute.
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+
+  "observability": { "enabled": true }
+}

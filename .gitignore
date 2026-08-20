@@ -44,3 +44,8 @@ next-env.d.ts
 
 # Claude Code local settings (per-mesin, jangan di-commit)
 .claude/settings.local.json
+
+# Cloudflare Workers build output
+.open-next/
+.wrangler/
+cloudflare-env.d.ts
