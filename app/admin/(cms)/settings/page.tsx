@@ -40,7 +40,21 @@ export default async function SettingsPage() {
           <section>
             <h2 className="text-xs font-medium text-[#888] uppercase tracking-widest mb-5">Contact & Agency</h2>
             <div className="space-y-4">
-              <Input label="Email" name="agency_email" type="email" defaultValue={s.agency_email} />
+              <Input
+                label="Email (shown on the site)"
+                name="agency_email"
+                type="email"
+                defaultValue={s.agency_email}
+                hint="Public address in the nav, footer and contact page. Visitors email this."
+              />
+              <Input
+                label="Notification email (private)"
+                name="notification_email"
+                type="email"
+                defaultValue={s.notification_email}
+                placeholder="you@example.com"
+                hint="Where new project inquiries are sent. Different from the address above — this one is never shown on the site. Leave empty to keep the current default."
+              />
               <Input label="Location" name="agency_location" defaultValue={s.agency_location} />
               <Textarea label="Footer tagline" name="agency_tagline" rows={2} defaultValue={s.agency_tagline} />
               <Input label="Contact invite text" name="contact_invite" defaultValue={s.contact_invite} />
