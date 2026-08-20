@@ -16,6 +16,9 @@ const eslintConfig = defineConfig([
     "docs/**",
     // CommonJS production entrypoint (not part of the Next/TS app surface):
     "server.js",
+    // Output build adapter Cloudflare — kode hasil generate, bukan sumber kita.
+    ".open-next/**",
+    ".wrangler/**",
   ]),
 ]);
 
