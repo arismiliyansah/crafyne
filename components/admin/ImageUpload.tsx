@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useState, useCallback, useEffect } from 'react'
+import { useRef, useState, useCallback } from 'react'
 import NextImage from 'next/image'
 import { createClient } from '@/lib/supabase/client'
 
@@ -37,7 +37,15 @@ export default function ImageUpload({
   const [drag, setDrag] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
 
-  useEffect(() => { setUrl(defaultValue) }, [defaultValue])
+  // Selaraskan dengan prop saat render, bukan lewat effect. Di sini
+  // defaultValue berupa string sehingga tidak pernah loop seperti
+  // MultiImageUpload, tapi polanya disamakan supaya tidak ada yang meniru
+  // versi yang salah.
+  const [syncedDefault, setSyncedDefault] = useState(defaultValue)
+  if (syncedDefault !== defaultValue) {
+    setSyncedDefault(defaultValue)
+    setUrl(defaultValue)
+  }
 
   const upload = useCallback(async (file: File) => {
     setError(null)

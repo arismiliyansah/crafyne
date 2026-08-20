@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useState, useCallback, useEffect } from 'react'
+import { useRef, useState, useCallback } from 'react'
 import NextImage from 'next/image'
 import { createClient } from '@/lib/supabase/client'
 
@@ -36,7 +36,21 @@ export default function MultiImageUpload({
   const [drag, setDrag] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
 
-  useEffect(() => { setUrls(defaultValue) }, [defaultValue])
+  // `defaultValue` adalah array, dan nilai default `= []` (juga `?? []` di
+  // pemanggil) menghasilkan array BARU pada setiap render. Dependency useEffect
+  // membandingkan identitas, jadi selalu terbaca "berubah" → setUrls → render →
+  // berubah lagi. Itu yang membuat /admin/work/new loop sampai React menyerah
+  // dengan "Maximum update depth exceeded".
+  //
+  // Pola resmi React untuk menyelaraskan state dengan prop adalah membandingkan
+  // saat render, bukan lewat effect — dan yang dibandingkan ISI-nya, bukan
+  // identitas arraynya.
+  const defaultKey = defaultValue.join('\u0000')
+  const [syncedKey, setSyncedKey] = useState(defaultKey)
+  if (syncedKey !== defaultKey) {
+    setSyncedKey(defaultKey)
+    setUrls(defaultValue)
+  }
 
   const uploadOne = useCallback(async (file: File): Promise<string | null> => {
     if (!ACCEPT.split(',').includes(file.type)) {
