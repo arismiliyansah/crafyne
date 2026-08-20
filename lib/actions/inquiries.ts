@@ -89,8 +89,14 @@ export async function submitInquiry(formData: FormData): Promise<{ error?: strin
   try {
     const resend = new Resend(process.env.RESEND_API_KEY)
     await resend.emails.send({
-      from: 'Crafyne CMS <onboarding@resend.dev>',
+      // Harus memakai domain yang terverifikasi di Resend. Selama pengirimnya
+      // onboarding@resend.dev — alamat sandbox — Resend hanya mengizinkan
+      // kirim ke email pemilik akun dan menolak sisanya dengan 403, berapa pun
+      // domain terverifikasi yang kamu punya.
+      from: process.env.RESEND_FROM ?? 'Crafyne <noreply@crafyne.com>',
       to: notifyTo,
+      // Balas langsung ke pengirim inquiry, bukan ke noreply@.
+      replyTo: email,
       subject: `New inquiry from ${name}`,
       html: `
         <div style="font-family:sans-serif;max-width:600px;margin:0 auto;color:#1a1a18">
