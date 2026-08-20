@@ -1,0 +1,47 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+
+  // BUKAN "crafyne" — nama itu sudah dipakai Worker lain di akun ini
+  // (bersama crafyne-admin / crafyne-builder / crafyne-outbound, produk yang
+  // terpisah dari website). Deploy dengan nama itu akan menimpanya.
+  "name": "crafyne-com",
+  "main": ".open-next/worker.js",
+
+  // nodejs_compat wajib untuk Next.js di Workers, dan compatibility_date
+  // harus 2024-09-23 atau lebih baru.
+  "compatibility_date": "2026-08-20",
+  "compatibility_flags": ["nodejs_compat"],
+
+  // Halaman statis dan aset dilayani langsung dari edge, tidak menyentuh Worker.
+  // Setelah perbaikan rendering kemarin, ini mencakup 23 dari 28 rute.
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+
+  // Cache ISR. Nama binding-nya ditentukan adapter — jangan diubah.
+  // Bucket terpisah dari bucket "crafyne" yang sudah ada sejak April.
+  "r2_buckets": [
+    {
+      "binding": "NEXT_INC_CACHE_R2_BUCKET",
+      "bucket_name": "crafyne-com-isr-cache"
+    }
+  ],
+
+  // Variabel runtime non-rahasia. NEXT_PUBLIC_* tidak perlu di sini — Next
+  // meng-inline-nya ke bundel saat build, bukan membacanya saat runtime.
+  // Yang rahasia (RESEND_API_KEY, TURNSTILE_SECRET_KEY) dipasang terpisah
+  // lewat `wrangler secret put`, jangan pernah ditulis di berkas ini.
+  "vars": {
+    "ADMIN_EMAIL": "me@arismiliyansah.com"
+  },
+
+  // Custom domain. Cloudflare membuat record DNS-nya sendiri dan menyajikan
+  // sertifikat Universal SSL, jadi Hostinger keluar sepenuhnya dari jalur.
+  "routes": [
+    { "pattern": "crafyne.com", "custom_domain": true },
+    { "pattern": "www.crafyne.com", "custom_domain": true }
+  ],
+
+  "observability": { "enabled": true }
+}
